@@ -8,9 +8,16 @@ body{
 
   #register{
     border-style: groove; /*solid,double,outset,inset,groove*/
-    border-width: 5px;
-    background-color:silver; 
-    border-radius: 20px;
+    border-width: 1cm;
+    border-radius: 10%;
+    background-color: silver;
+    height: 10cm;
+    width: 10cm;
+    
+    transform: translate(63%,30%);
+    
+    
+    
     
      color:black;
      text-align: center;
