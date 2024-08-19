@@ -5,22 +5,38 @@
     <title>BROSISCHAT</title>
 </head>
 <body>
-    
+<link rel="stylesheet" href="style.css"> 
 <h1>An Interesting App for Our MMU Bros and Sisters</h1>
 <br>
 <h3>Dive in...but first..</h3>
 <br>
 
-<div>
+<div id="register">
 <form action="function.py", method="post"><!--post method is more safer and secure in terms of data handling-->
-    Name:<input type="text", name="name", placeholder="Bethany", required>
+    <div>
+    <label for="name">Name: </label>
+    <input type="text", name="name", placeholder="Bethany", id="name" required , size="70", >
+    </div>
     <br>
-    MMU email:<input type="email", name="email", placeholder="Tyler@student.mmu.edu.my", required><!---->
+    <div>
+    <label for="email">Student Email: </label>
+    <input type="email", name="email", placeholder="example@student.mmu.edu.my", id="email",required , size="70"><!---->
+    </div>
     <br>
-    Phone-number:<input type="text" , name="number" , placeholder="01xxxxxxxx" , required>
+    <div>
+    <label for="password">Password: </label>
+    <input type="password" , name="password" , placeholder="Create password" , id="password" required, size="70">
+    </div>
     <br>
-    <input type="reset" , value="Reset">
-    <input type="submit" , value="Submit">
+    <div>
+    <label for="number">Phone-number: </label>
+    <input type="text" , name="number" , placeholder="01xxxxxxxx" , id="number" , required , size="70">
+    </div>
+    <br>
+     <div>
+    <input type="Submit" , value="Submit", >
+    <a href=""><p>Already have an account? Login</p></a>
+     </div>
 
 </form>
 </div>

@@ -1,0 +1,30 @@
+body{
+
+  h1{
+     text-align: center;
+
+  }
+
+
+  #register{
+    border-style: groove; /*solid,double,outset,inset,groove*/
+    border-width: 5px;
+    background-color:silver; 
+    border-radius: 20px;
+    
+     color:black;
+     text-align: center;
+ 
+    }
+ 
+  
+
+
+  
+  
+  h3{
+    text-align:center ; 
+  }
+
+
+}
