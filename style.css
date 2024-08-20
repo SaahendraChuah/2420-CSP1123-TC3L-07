@@ -1,4 +1,5 @@
 body{
+  
   background-image: url(backgroundimage.png);
 
   h1{
@@ -47,6 +48,7 @@ body{
     text-align:center ; 
     
   }
+  
 
 
 }
