@@ -1,6 +1,7 @@
 body{
   
   background-image: url(backgroundimage.png);
+  
 
   h1{
      text-align: center;
@@ -16,7 +17,7 @@ body{
     height: 10cm;
     width: 10cm;
     
-    transform: translate(63%,30%);
+    transform: translate(100%,35%);
     
     
     
@@ -36,7 +37,7 @@ body{
       width: 10cm;
       color: black;
       text-align: center;
-      transform: translate(63%,30%);
+      transform: translate(100%,35%);
     }
  
   
