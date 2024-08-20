@@ -9,7 +9,7 @@ body{
   }
 
 
-  #register{
+  form{
     border-style: groove; /*solid,double,outset,inset,groove*/
     border-width: 1cm;
     border-radius: 10%;
@@ -18,7 +18,10 @@ body{
     width: 10cm;
     
     transform: translate(100%,35%);
-    
+    animation: register;
+    animation-iteration-count: initial;
+    animation-timing-function: ease;
+    animation-duration: 5s;
     
     
     
@@ -27,7 +30,7 @@ body{
  
     }
 
-    #login{
+   /* #login{
 
       border-style: groove;
       border-width: 1cm;
@@ -38,7 +41,7 @@ body{
       color: black;
       text-align: center;
       transform: translate(100%,35%);
-    }
+    }*/
  
   
 
