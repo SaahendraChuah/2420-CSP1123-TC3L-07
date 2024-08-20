@@ -1,58 +1,28 @@
 body{
-  
-  background-image: url(backgroundimage.png);
-  
-
-  h1{
-     text-align: center;
-
-  }
-
-
-  form{
-    border-style: groove; /*solid,double,outset,inset,groove*/
+background-image: url(backgroundimage.png);
+}
+form{
+    border-style: groove;/*solid,double,outset,inset,groove*/
     border-width: 1cm;
     border-radius: 10%;
     background-color: silver;
     height: 10cm;
     width: 10cm;
-    
+    text-align: center;
+    padding: 20;
+
     transform: translate(100%,35%);
-    animation: register;
+    animation: animation;
     animation-iteration-count: initial;
     animation-timing-function: ease;
-    animation-duration: 5s;
-    
-    
-    
-     color:black;
-     text-align: center;
- 
-    }
-
-   /* #login{
-
-      border-style: groove;
-      border-width: 1cm;
-      border-radius: 10%;
-      background-color: silver;
-      height: 10cm;
-      width: 10cm;
-      color: black;
-      text-align: center;
-      transform: translate(100%,35%);
-    }*/
- 
-  
+    animation-duration: 4s;
+}
 
 
-  
-  
-  h3{
-    text-align:center ; 
-    
-  }
-  
 
+
+@keyframes animation{
+    from{margin-top: 100%;}
+    to{margin-top: 0%;}
 
 }
