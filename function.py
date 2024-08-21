@@ -1,20 +1,16 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import sqlite3
+from flask import Flask , render_template
+app=Flask(__name__)
 
-app=Flask(__name__) #creates flask application object
-app.config.from_mapping(SECRET_KEY="sqlite:/database.db")
-database1=SQLAlchemy(app)
 
-class Login_Register(database1.Model):
-    
-    Username=database1.Column(database1.Text, nullable=False) # does not accept any null values
-    Student_Email=database1.Column(database1.Text, nullable=False)
-    Password=database1.Column(database1.Password, nullable=False)
-    Phone_Number=database1.Column(database1.Text, nullable=False)
+@app.route("/register" , methods=["GET" ,"POST"])
+def index():
+    return render_template("register.html")
+
+@app.route("/login" , methods = ["GET" , "POST"])
+def login():
+    return render_template("login.html")
 
 
 
-
-if __name__== "main":
-    app.run(debug=True) #shows us actual error when the code is run
+if __name__=="__main__":
+    app.run(debug=True)
