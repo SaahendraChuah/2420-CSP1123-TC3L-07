@@ -4,9 +4,13 @@
     <title>Register</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     
-   {% extends templates/register.html%}
+    
+    {% block title %}
+    Register
+   
     <div id="register" >
         <form action="/register", method="post"><!--post method is more safer and secure in terms of data handling-->
             
@@ -48,7 +52,7 @@
         </form>
         </div>
         
-   {% endblock  %}     
+     
         
         
         
@@ -57,7 +61,7 @@
         
         
         
-        
+  {% endblock  %}      
         
         
         
