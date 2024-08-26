@@ -1,16 +1,27 @@
-from flask import Flask , render_template , request , redirect 
+from flask import Flask , render_template , request , redirect  
 import jinja2
-from jinja2 import Environment,FileSystemLoader
-from flask_sqlalchemy import SQLAlchemy
+#from jinja2 import Environment,FileSystemLoader
+from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.sql import functions #to access the sql functions 
-import flask_login
+from flask_login import UserMixin , LoginManager , login_user , logout_user
 app=Flask(__name__)
+login_manager=LoginManager()
+login_manager.init_app(app)
 
-env=Environment(loader=jinja2.FileSystemLoader("templates/"))
-template=env.get_template("register.html")
+#db2=SQLAlchemy(app)
+
+
+#env=Environment(loader=jinja2.FileSystemLoader("templates/"))
+#template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
 db1=SQLAlchemy(app)
+
+
+
 class Login_Register(db1.Model):
+       
+       
+
        student_id=db1.Column(db1.String(100) , primary_key=True) # contains value that is immutable
        username=db1.Column(db1.String(100) , nullable=False)
        email=db1.Column(db1.String(60) ,unique=True, nullable=False)
@@ -20,9 +31,27 @@ class Login_Register(db1.Model):
        def __str__(self):
             return f"<User  {self.username}>"
        
+       
+
+class OnlyLogin(UserMixin , db1.Model):
+     
+     
+     student_id=db1.Column(db1.String(100) , primary_key=True )
+     username=db1.Column(db1.String(100) , nullable=False)
+     password=db1.Column(db1.String(100) , unique=True , nullable=False)
+
+     def __str__(self):
+          return f"<User {self.username}>"
+
+
+@login_manager.user_loader
+def user_loading(user_id):
+     return OnlyLogin.query.get(user_id)
+
 
 with app.app_context():
      db1.create_all()
+
     
 
 
