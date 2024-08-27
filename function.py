@@ -1,4 +1,4 @@
-from flask import Flask , render_template , request , redirect  ,  flash
+from flask import Flask , render_template , request , redirect  ,  flash , url_for
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
@@ -14,11 +14,12 @@ login_manager.init_app(app)
 #env=Environment(loader=jinja2.FileSystemLoader("templates/"))
 #template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
+app.config["SECRET_KEY"] = "happy_birthday"
 db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-class Login_Register(db1.Model):
+class Login_Register(UserMixin,db1.Model):
        
        
 
@@ -29,28 +30,23 @@ class Login_Register(db1.Model):
        phone_number=db1.Column(db1.String(20), nullable=False)
 
        def __str__(self):
+            
             return f"<User  {self.username}>"
-       
+       def get_id(self):
+            return self.student_id
        
 
-class OnlyLogin(UserMixin , db1.Model):
-     
-     
-     student_id=db1.Column(db1.String(100) , primary_key=True )
-     username=db1.Column(db1.String(100) , nullable=False)
-     password=db1.Column(db1.String(100) , unique=True , nullable=False)
 
-     def __str__(self):
-          return f"<User {self.username}>"
 
 
 @login_manager.user_loader
 def user_loading(user_id):
-     return OnlyLogin.query.get(user_id)
+     return Login_Register.query.get(user_id)
 
 
 with app.app_context():
      db1.create_all()
+     
 
     
 
@@ -73,7 +69,7 @@ def register():
           email_data=request.form["email"]
           password_data=request.form["password"]
           number_data=request.form["number"]
-          secured_password=bcrypt.generate_password_hash(password_data)
+          secured_password=bcrypt.generate_password_hash(password_data).decode("utf-8")
 
           
           input_data=Login_Register(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
@@ -94,14 +90,11 @@ def login():
          username_data= request.form["username"]
          password_data= request.form["password"]
 
-         login_data= OnlyLogin(student_id= student_id_data , username=username_data , password=password_data) 
-         db1.session.add(login_data)
-         db1.session.commit()
          
          user_register=Login_Register.query.filter_by(username=username_data).first()
-         user_login=OnlyLogin.query.filter_by(username=username_data).first()
-         if user_register==user_login and bcrypt.check_password_hash(password=password_data):
-              login_user(user_login)
+         
+         if user_register and bcrypt.check_password_hash(user_register.password,password_data):
+              login_user(user_register)
               return redirect("/main")
          else:
               flash("Login error.")
@@ -119,8 +112,8 @@ def main():
 
 @app.route("/logout" , methods=["GET" , "POST"])
 def logout():
-       logout_user
-       return redirect("/login")
+       logout_user()
+       return redirect(url_for('login'))
      
 
      
