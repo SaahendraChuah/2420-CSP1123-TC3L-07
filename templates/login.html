@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+
+
+<body>
+    
+    <link rel="stylesheet" href="style.css">
+    <div id="login"> 
+        <form action="/login" , method="post">
+            
+            <br>
+            <div>
+            <label for="id">Student ID: </label>  
+            <input type="text" , name="id" , id="id" , placeholder="Enter your Student ID" , required , size="45"> 
+            </div>
+            <br>
+            <br>
+            <br>
+            <div>
+            <label for="username"> Username: </label>
+            <input type="text" , name="username" , id="username" , placeholder="Enter your username" , required , size="45" >
+            </div>
+            <br>
+            <br>
+            <br>
+            <div>
+            <label for="password"> Password: </label>
+            <input type="password" , name="password", id="password" , placeholder="Enter your password" , required , size="45">
+            </div>
+             
+             <br>
+             <br>
+             <div>
+                <input type="submit" , value="Login" >
+                <br>
+                <br>
+                <br>
+               <a href="{{url_for('register')}}"><p>Don't have an account? Register</p></a>
+             </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

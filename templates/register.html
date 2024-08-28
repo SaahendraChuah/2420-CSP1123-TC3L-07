@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    
+    
+    {% block title %}
+    Register
+   
+    <div id="register" >
+        <form action="/register", method="post"><!--post method is more safer and secure in terms of data handling-->
+            
+            <br>
+            <div>
+            <label for="username">Username: </label>
+            <input type="text", name="username", placeholder="Create Username", id="username" , required , size="45">
+            </div>
+            <br>
+            <div>
+            <label for="id">Student ID: </label>  
+            <input type="text" , name="id" , placeholder="Enter your Student ID" , id="id" , required , size="45">
+            </div> 
+            <br>
+            <div>
+            <label for="email">Student Email: </label>
+            <input type="email", name="email", placeholder="name@student.mmu.edu.my", id="email", required , size="45">
+            </div>
+            <br>
+            
+            <div>
+            <label for="password">  Password:  </label>
+            <input type="password" , name="password" , placeholder="Create password" , id="password" , required , size="45">
+            </div>
+            
+            <br>
+            
+            <div>
+            <label for="number">Phone-number: </label>
+            <input type="text" , name="number" , placeholder="01xxxxxxxx" , id="number" , required , size="45">
+            </div>
+            
+            <br>
+             <div>
+            <input type="Submit" , value="Register">
+            <a href="{{url_for('login')}}"><p>Already have an account? Login</p></a>
+             </div>
+        
+        </form>
+        </div>
+        
+     
+        
+        
+        
+        
+        
+        
+        
+        
+  {% endblock  %}      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+</body>
+
+
+
+
+</html>

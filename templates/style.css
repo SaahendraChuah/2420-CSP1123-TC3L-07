@@ -1,0 +1,28 @@
+body{
+background-image: url(backgroundimage.png);
+}
+form{
+    border-style: groove;/*solid,double,outset,inset,groove*/
+    border-width: 1cm;
+    border-radius: 10%;
+    background-color: silver;
+    height: 10cm;
+    width: 10cm;
+    text-align: center;
+    padding: 20;
+
+    transform: translate(100%,35%);
+    animation: animation;
+    animation-iteration-count: initial;
+    animation-timing-function: ease;
+    animation-duration: 4s;
+}
+
+
+
+
+@keyframes animation{
+    from{margin-top: 100%;}
+    to{margin-top: 0%;}
+
+}
