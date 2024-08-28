@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU WIN ICEBREAKER</title>
-    <link rel ="stylesheet" href="mainmenu.css">
+    <link rel ="stylesheet" href="{{url_for('static' , filename='mainmenu.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
 </head>
 <body>
+    {% if session.logged_in %}
+           <h3>{{session.username}}</h3>
+        {% endif %}
     <nav>
+        
         <ul>
             <li><a href="#"><i class="fa-solid fa-user"></i>Profile</a></li>
             <li>               
