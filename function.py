@@ -1,7 +1,8 @@
-from flask import Flask , render_template , request , redirect  ,  flash , url_for
+from flask import Flask , render_template , request , redirect   , url_for
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
+from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user 
 app=Flask(__name__)
@@ -71,12 +72,18 @@ def register():
           number_data=request.form["number"]
           secured_password=bcrypt.generate_password_hash(password_data).decode("utf-8")
 
-          
-          input_data=Login_Register(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
-          db1.session.add(input_data)
-          db1.session.commit()
+          try:
+           input_data=Login_Register(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
+           db1.session.add(input_data)
+           db1.session.commit()
 
-          return redirect("/login")
+           return redirect("/login")
+          
+          except IntegrityError:
+               db1.session.rollback()
+               return ("You already have an existing account.")
+               
+               
      else:
           return render_template("register.html")
 
@@ -97,8 +104,8 @@ def login():
               login_user(user_register)
               return redirect("/main")
          else:
-              flash("Login error.")
-
+              
+              return redirect ("/login")
     else:
          
          return render_template("login.html")
