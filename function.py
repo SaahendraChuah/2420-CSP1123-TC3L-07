@@ -1,6 +1,6 @@
 from flask import Flask , render_template , request , redirect   , url_for , session
 import jinja2
-#from jinja2 import Environment,FileSystemLoader
+
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
@@ -16,7 +16,7 @@ login_manager.init_app(app)
 
 
 #env=Environment(loader=jinja2.FileSystemLoader("templates/"))
-#template=env.get_template("register.html")
+#template=env.get_template("chat.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
 app.config["SECRET_KEY"] = "happy_birthday"
 db1=SQLAlchemy(app)
@@ -133,13 +133,14 @@ app.config['SECRET_KEY'] = 'private_chat'
 socketio = SocketIO(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)  # For handling proxy headers if needed
 
-env=Environment(loader=jinja2.FileSystemLoader("template/"))
+env=Environment(loader=jinja2.FileSystemLoader("templates/"))
 template=env.get_template("chat.html")
+
 
 # Store users and their rooms
 users = {}
 
-@app.route('/chat')
+@app.route("/chat")
 def index():
     return render_template('chat.html')
 
