@@ -11,13 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
 </head>
 <body>
-    {% if session.logged_in %}
-           <h3>{{session.username}}</h3>
-        {% endif %}
     <nav>
         
         <ul>
-            <li><a href="#"><i class="fa-solid fa-user"></i>Profile</a></li>
+            <li>
+                <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
+                <ul class="dropdown">
+                    <li><a href="#">You Are Logged In As {{user.username}}</a></li>
+                </ul>
+            <li>
             <li>               
                 <a href="#"><i class="fa-solid fa-globe"></i>Network</a>
                 <ul class="dropdown">

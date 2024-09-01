@@ -113,7 +113,7 @@ def login():
 
 @app.route("/main")    
 def main():
-     return render_template("main.html")
+     return render_template("main.html", user=current_user)
 
 
 
