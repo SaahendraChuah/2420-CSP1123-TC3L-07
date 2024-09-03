@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    {% block head %}{% endblock %}
+
 </head>
 <body>
     
@@ -16,12 +18,14 @@
     <nav>
         
         <ul>
-            <form action="/search" , method="post">
+            
             <div class="search" >
-                <a class="active"></a>
-                <input type="search" , placeholder="Search..." , size="60" , >
+                <form action="{{url_for('search')}}" , method="post">
+                <input type="search" , name="search" placeholder="Search..." , size="60" , >
+                <button type="submit"> Search </button>
+                </form>
             </div>
-            </form>
+            
             <li>
                 <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
                 <ul class="dropdown">
@@ -37,6 +41,7 @@
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>
             <li><a href="{{url_for('logout')}}"><i class="fa-solid fa-lock"></i>Logout</a></li>
+            {% block body%}{% endblock %}
         </ul>
     </nav>
 </body>

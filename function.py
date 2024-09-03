@@ -51,12 +51,17 @@ with app.app_context():
      
 
 @app.route("/search" , methods=["GET" , "POST"])
-def search(searchbar):
+def search():
      if request.method == "POST":
-          username=request.form["username"]
-          display=User.query.filter_by(username=username).first_or_404()
-          return display in searchbar
-
+          search_query=request.form.get("search")
+          search_results=User.query.filter(User.username.contains(search_query)).all()
+          return render_template("view.html" , results=search_results)
+     else:
+          return render_template("main.html")
+      
+@app.route("/view")  
+def view():
+     return render_template("view.html") 
 
 
 @app.route("/")
