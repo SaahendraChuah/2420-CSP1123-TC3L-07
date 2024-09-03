@@ -50,7 +50,13 @@ with app.app_context():
      db1.create_all()
      
 
-    
+@app.route("/search" , methods=["GET" , "POST"])
+def search(searchbar):
+     if request.method == "POST":
+          username=request.form["username"]
+          display=User.query.filter_by(username=username).first_or_404()
+          return display in searchbar
+
 
 
 @app.route("/")
@@ -113,6 +119,7 @@ def login():
 
 @app.route("/main")    
 def main():
+     
      return render_template("main.html", user=current_user)
 
 
