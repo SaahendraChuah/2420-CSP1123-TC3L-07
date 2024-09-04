@@ -21,7 +21,7 @@ db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-class Login_Register(UserMixin,db1.Model):
+class User(UserMixin,db1.Model):
        
        
 
@@ -43,7 +43,7 @@ class Login_Register(UserMixin,db1.Model):
 
 @login_manager.user_loader
 def user_loading(user_id):
-     return Login_Register.query.get(user_id)
+     return User.query.get(user_id)
 
 
 with app.app_context():
@@ -59,7 +59,7 @@ def test1():
 
 @app.route("/check_db")
 def check_db():
-     users=Login_Register.query.all()
+     users=User.query.all()
      return f"Users : {users}"
 
 
@@ -74,7 +74,7 @@ def register():
           secured_password=bcrypt.generate_password_hash(password_data).decode("utf-8")
 
           try:
-           input_data=Login_Register(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
+           input_data=User(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
            db1.session.add(input_data)
            db1.session.commit()
 
@@ -99,7 +99,7 @@ def login():
          password_data= request.form["password"]
 
          
-         user_register=Login_Register.query.filter_by(username=username_data).first()
+         user_register=User.query.filter_by(username=username_data).first()
          
          if user_register and bcrypt.check_password_hash(user_register.password,password_data):
               login_user(user_register)
