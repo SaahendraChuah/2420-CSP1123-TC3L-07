@@ -2,62 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Private Messaging</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const socket = io();
-
-            // Join or leave rooms
-            const username = prompt('Enter your username:');
-            if (username) {
-                socket.emit('set_username', username);
-            }
-
-            socket.on('user_list', users => {
-                const userList = document.getElementById('user-list');
-                userList.innerHTML = '';
-                users.forEach(user => {
-                    const li = document.createElement('li');
-                    li.textContent = user;
-                    userList.appendChild(li);
-                });
-            });
-
-            socket.on('received_message', data => {
-                const messageDiv = document.createElement('div');
-                messageDiv.textContent = `${data.sender}: ${data.message}`;
-                document.getElementById('messages').appendChild(messageDiv);
-            });
-
-            socket.on('message_error', data => {
-                alert(data.error);
-            });
-
-            document.getElementById('send-form').addEventListener('submit', event => {
-                event.preventDefault();
-                const recipient = document.getElementById('recipient').value;
-                const message = document.getElementById('message').value;
-                socket.emit('send_message', { recipient, message });
-                document.getElementById('message').value = '';
-            });
-        });
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect with One Another</title>
 </head>
 <body>
-    <h1>Private Messaging</h1>
-    <div>
-        <h2>Users</h2>
-        <ul id="user-list"></ul>
-    </div>
-    <div>
-        <h2>Messages</h2>
-        <div id="messages"></div>
-    </div>
-    <form id="send-form">
-        <input type="text" id="recipient" placeholder="Recipient">
-        <input type="text" id="message" placeholder="Message">
-        <button type="submit">Send</button>
+    <h1>Connect with One Another</h1>
+    
+    <form action="{{ url_for('add_post') }}" method="post">
+        <input type="text" name="title" placeholder="Name & Student ID" required><br>
+        <textarea name="content" placeholder="Content" required></textarea><br>
+        <input type="submit" value="Add Post">
     </form>
+
+    <hr>
+
+    {% for post in posts %}
+        <div>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+        </div>
+        <hr>
+    {% endfor %}
 </body>
 </html>

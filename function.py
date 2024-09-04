@@ -1,4 +1,4 @@
-from flask import Flask , render_template , request , redirect   , url_for , session
+from flask import Flask , render_template , request , redirect   , url_for , session , jsonify
 import jinja2
 
 from flask_sqlalchemy import SQLAlchemy 
@@ -50,6 +50,7 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
+     db1.drop_all()
      
 
     
@@ -128,87 +129,24 @@ def logout():
 
 
 
+from flask import Flask, render_template, request, redirect, url_for
 
-app.config['SECRET_KEY'] = 'private_chat'
-socketio = SocketIO(app)
-app.wsgi_app = ProxyFix(app.wsgi_app)  # For handling proxy headers if needed
+app = Flask(__name__)
 
-env=Environment(loader=jinja2.FileSystemLoader("templates/"))
-template=env.get_template("chat.html")
+# In-memory storage for blog posts
+posts = []
 
-
-# Store users and their rooms
-users = {}
-
-@app.route("/chat")
+@app.route('/chat')
 def index():
-    return render_template('chat.html')
+    return render_template('chat.html', posts=posts)
 
-@socketio.on('connect')
-def handle_connect():
-    user = session.get('username')
-    if user:
-        users[user] = request.sid  # Store the user's session ID
-        emit('user_list', list(users.keys()), broadcast=True)
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    user = session.get('username')
-    if user in users:
-        del users[user]
-        emit('user_list', list(users.keys()), broadcast=True)
-
-@socketio.on('set_username')
-def handle_set_username(username):
-    session['username'] = username
-    users[username] = request.sid
-    emit('user_list', list(users.keys()), broadcast=True)
-
-@socketio.on('send_message')
-def handle_message(data):
-    recipient = data['recipient']
-    message = data['message']
-    sender = session.get('username')
-    
-    if recipient in users:
-        recipient_sid = users[recipient]
-        emit('received_message', {'sender': sender, 'message': message}, room=recipient_sid)
-    else:
-        emit('message_error', {'error': 'Recipient not online'}, room=request.sid)
+@app.route('/add', methods=['POST'])
+def add_post():
+    title = request.form.get('title')
+    content = request.form.get('content')
+    if title and content:
+        posts.append({'title': title, 'content': content})
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    socketio.run(app, debug=True)     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__=="__main__":
     app.run(debug=True)
