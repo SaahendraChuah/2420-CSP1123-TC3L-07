@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Component</title>
+    <style>
+       body{
+        background-image: linear-gradient(to right , red , white , blue );
+       }
+
+       h1{
+        text-align: center;
+        color: blue;
+       }
+
+       #qrcode{
+        position: absolute; 
+           top: 45%; 
+           left: 50%; 
+           transform: translate(-50%, -50%); 
+           border: 1px solid #ccc;
+           padding: 10px;
+           background-image: linear-gradient(red , blue ,white);
+       }
+
+       p{
+        text-align: center;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 20px;
+       }
+
+
+    </style>
+</head>
+<body>
+    <h1><u>Unique Qr Code Profile</u></h1>
+    <div id="qrcode">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://www.example.com" alt="QR Code">
+    </div>
+    <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
+    <p>Qr Code Is Unique For Every User</p>
+
+
+</body>
+</html>

@@ -4,16 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMU WIN ICEBREAKER</title>
-    <link rel ="stylesheet" href="mainmenu.css">
+    <link rel ="stylesheet" href="{{url_for('static' , filename='mainmenu.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    {% block head %}{% endblock %}
+
 </head>
 <body>
+    {% block  content %}
+    
     <nav>
+        
         <ul>
-            <li><a href="#"><i class="fa-solid fa-user"></i>Profile</a></li>
+            
+            <div class="search" >
+                <form action="{{url_for('search')}}" , method="post">
+                <input type="search" , name="search" placeholder="Search..." , size="60" , >
+                <button type="submit"> Search </button>
+                </form>
+            </div>
+            
+            <li>
+                <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
+                <ul class="dropdown">
+                    <li><a href="{{url_for('qrcode')}}">You Are Logged In As {{user.username}}</a></li>
+                </ul>
+            <li>
             <li>               
                 <a href="#"><i class="fa-solid fa-globe"></i>Network</a>
                 <ul class="dropdown">
@@ -23,6 +41,7 @@
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>
             <li><a href="{{url_for('logout')}}"><i class="fa-solid fa-lock"></i>Logout</a></li>
+            {% endblock %}
         </ul>
     </nav>
 </body>
