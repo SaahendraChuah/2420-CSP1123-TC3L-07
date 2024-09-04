@@ -16,7 +16,7 @@ login_manager.init_app(app)
 #env=Environment(loader=jinja2.FileSystemLoader("templates/"))
 #template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
-app.config["SECRET_KEY"] = "happy_birthday"
+app.config["SECRET_KEY"] = "happy_birthday" 
 db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
@@ -50,7 +50,18 @@ with app.app_context():
      db1.create_all()
      
 
-    
+@app.route("/search" , methods=["GET" , "POST"])
+def search():
+     if request.method == "POST":
+          search_query=request.form.get("search")
+          search_results=User.query.filter(User.username.contains(search_query)).all()
+          return render_template("view.html" , user=search_results  )
+     else:
+          return render_template("main.html")
+      
+@app.route("/view")  
+def view():
+     return render_template("view.html") 
 
 
 @app.route("/")
@@ -113,6 +124,7 @@ def login():
 
 @app.route("/main")    
 def main():
+     
      return render_template("main.html", user=current_user)
 
 
