@@ -13,7 +13,7 @@
 
 </head>
 <body>
-    
+    {% block  content %}
     
     <nav>
         
@@ -41,7 +41,7 @@
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>
             <li><a href="{{url_for('logout')}}"><i class="fa-solid fa-lock"></i>Logout</a></li>
-            {% block body%}{% endblock %}
+            {% endblock %}
         </ul>
     </nav>
 </body>
