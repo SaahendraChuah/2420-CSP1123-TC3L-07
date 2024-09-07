@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet"  href="{{url_for('static', filename='style2.css')}}">
+</head>
+<body>
+    <div class="profile">
+      <div id="profilephoto">
+       <form action="functions.py"    method="post" enctype="multipart/form-data">
+        <label for="profilephoto"></label>
+        <input type="image" src="#" id="profilephoto" name="profilephoto" width="350" height="500">
+        <div>
+        <label for="profilephoto">Add your bio:</label>
+        <input type="text" id="profilephoto" name="profilephoto" size="45">
+        </div>
+        <br>
+        <input type="file" id="profilephoto" name="profilephoto" accept="image/*">
+       </form>
+      </div>
+
+    
+    <div id="qrcode">
+        <h1><u>Unique Qr Code Profile</u></h1>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://www.example.com" alt="QR Code">
+        <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
+        <p>Qr Code Is Unique For Every User</p>
+    </div>
+
+
+    
+    </div>
+    
+</body>
+
+
+
+
+
+
+
+</html>

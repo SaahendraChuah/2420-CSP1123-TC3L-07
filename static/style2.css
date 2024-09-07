@@ -1,0 +1,27 @@
+body{
+   background-image: linear-gradient(to right,purple,red,purple) ;
+}
+
+.profile{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+
+
+#profilephoto,#qrcode{
+    flex:1;
+    margin: 10px;
+
+}
+
+#profilephoto{
+    text-align: center;
+}
+
+#qrcode{
+    text-align: center;
+}
