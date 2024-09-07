@@ -9,18 +9,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    {% block head %}{% endblock %}
+
 </head>
 <body>
-    
+    {% block  content %}
     
     <nav>
         
         <ul>
-            <div class="search">
-                <a class="active"></a>
-                <input type="search" , placeholder="Search..." , size="60">
+            
+            <div class="search" >
+                <form action="{{url_for('search')}}" , method="post">
+                <input type="search" , name="search" placeholder="Search..." , size="60" , >
+                <button type="submit"> Search </button>
+                </form>
             </div>
-
+            
             <li>
                 <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
                 <ul class="dropdown">
@@ -36,6 +41,7 @@
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>
             <li><a href="{{url_for('logout')}}"><i class="fa-solid fa-lock"></i>Logout</a></li>
+            {% endblock %}
         </ul>
     </nav>
 </body>
