@@ -4,7 +4,9 @@ import jinja2
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
-from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user 
+from werkzeug.utils import secure_filename,send_file
+import os
+from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -17,6 +19,7 @@ login_manager.init_app(app)
 #template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
 app.config["SECRET_KEY"] = "happy_birthday" 
+app.config["UPLOAD_PROFILE"] = os.path.join(os.getcwd(), "static/uploads/")
 db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
@@ -26,10 +29,11 @@ class User(UserMixin,db1.Model):
        
 
        student_id=db1.Column(db1.String(100) , primary_key=True) # contains value that is immutable
-       username=db1.Column(db1.String(100) , nullable=False)
+       username=db1.Column(db1.String(100) , unique=True, nullable=False)
        email=db1.Column(db1.String(60) ,unique=True, nullable=False)
        password=db1.Column(db1.String(100) ,unique=True, nullable= False)
-       phone_number=db1.Column(db1.String(20), nullable=False)
+       phone_number=db1.Column(db1.String(20),unique=True, nullable=False)
+       profile=db1.relationship('Profile' , backref='user', uselist=False)
 
        def __str__(self):
             
@@ -37,6 +41,11 @@ class User(UserMixin,db1.Model):
        def get_id(self):
             return self.student_id
        
+class Profile(db1.Model):
+      id=db1.Column(db1.Integer, primary_key=True)
+      user_name=db1.Column(db1.String(100) , db1.ForeignKey(User.username), nullable=False)
+      profile_pic=db1.Column(db1.String(100), nullable=True)
+      bio=db1.Column(db1.String(100) , nullable=True)
 
 
 
@@ -48,6 +57,7 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
+     
      
 
 @app.route("/search" , methods=["GET" , "POST"])
@@ -139,7 +149,28 @@ def logout():
      
 @app.route("/profile" )
 def profile():
-     return render_template("profile.html")
+     return render_template("profile.html" , user=current_user)
+
+
+@app.route("/profilephoto" , methods=["GET" , "POST"])
+@login_required
+def profilephoto():
+     if request.method == "POST":
+         profile_pic=request.files["profilephoto"]
+         bio=request.form["bio"]
+         if profile_pic:
+              filename=secure_filename(profile_pic.filename)  #securing the file
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"]), filename)
+              existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.profile_pic = filename
+                   existing_profile.bio = bio
+              else:
+                   new_profile=Profile(user_name=current_user.username,profile_pic=filename,bio=bio)
+                   db1.session.add(new_profile)
+                   
+              db1.session.commit()
+     return redirect(url_for('profile'))      
 
 
 @app.route("/qrcode")

@@ -27,7 +27,7 @@
             </div>
             
             <li>
-                <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
+                <a href="{{url_for('profile')}}"><i class="fa-solid fa-user"></i>Profile</a>
                 <ul class="dropdown">
                     <li><a href="{{url_for('qrcode')}}">You Are Logged In As {{user.username}}</a></li>
                 </ul>
