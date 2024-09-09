@@ -9,23 +9,33 @@
 <body>
     <div class="profile">
       <div id="profilephoto">
-       <form action="{{url_for('profilephoto')}}"    method="post" enctype="multipart/form-data">
+       <form action="{{url_for('profile')}}"    method="post" enctype="multipart/form-data">
         <div class="photo-frame">
-          {% if user.profile %}
-           <img src="{{url_for('static' , filename='uploads/' +  user.profile.profile_pic)}}" id="profilephoto" alt="ProfilePhoto" width="350" height="500">
+          {% if user.profile and user.profile.profile_pic %}
+            {% if user.profile.profile_pic != "" %}
+               <img src="{{url_for('static' , filename='uploads/' +  user.profile.profile_pic)}}" id="profilephoto" alt="ProfilePhoto" width="350" height="500">
+            {% else %}
+               <p>No profile picture</p>
+            {% endif %}
+
           {% else %}
-          <p>No profile pic available</p>
-          {% endif %}
+            <p>No profile picture </p>
+          {% endif%}
           </div>
         <div>
           <label for="bio">Add your bio:</label>
-          <input type="text" id="bio" name="bio" size="45" value="{{user.profile.bio}}">
+          <input type="text" id="bio" name="bio" size="45" value="{{user.profile.bio if user.profile else '' }}">
         </div>
         <br>
         <input type="file" id="profilephoto" name="profilephoto" accept="image/*">
         <br>
         <input type="submit"  value="Upload">
        </form>
+         <form action="{{url_for('removepic')}}"  method="post">
+           <input type="submit"  value="Remove">
+         </form>
+         
+
       </div>
 
     

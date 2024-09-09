@@ -1,4 +1,4 @@
-from flask import Flask , render_template , request , redirect   , url_for
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
@@ -10,6 +10,10 @@ from flask_login import UserMixin , LoginManager , login_user , logout_user , cu
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
+directory= 'C:\\Users\\User\\OneDrive\\Desktop\\2420-CSP1123-TC3L-07\\static\\uploads\\'
+if not os.path.exists(directory):
+     os.makedirs(directory)
+os.chmod(directory,0o777) 
 
 
 #db2=SQLAlchemy(app)
@@ -147,20 +151,15 @@ def logout():
      
 
      
-@app.route("/profile" )
+@app.route("/profile", methods=["GET" , "POST"])
 def profile():
-     return render_template("profile.html" , user=current_user)
-
-
-@app.route("/profilephoto" , methods=["GET" , "POST"])
-@login_required
-def profilephoto():
      if request.method == "POST":
          profile_pic=request.files["profilephoto"]
          bio=request.form["bio"]
+
          if profile_pic:
               filename=secure_filename(profile_pic.filename)  #securing the file
-              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"]), filename)
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
               existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
               if existing_profile:
                    existing_profile.profile_pic = filename
@@ -170,18 +169,45 @@ def profilephoto():
                    db1.session.add(new_profile)
                    
               db1.session.commit()
-     return redirect(url_for('profile'))      
+              return redirect(url_for('profile'))      
+    
+         else:
+              existing_profile= Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.bio = bio
+              else:    
+                  new_profile=Profile(user_name=current_user.username,bio=bio)
+                  db1.session.add(new_profile)
+     
+         db1.session.commit()
+         return redirect(url_for('profile'))   
+     else:
+       return render_template("profile.html" , user=current_user)
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+     return send_from_directory(app.config["UPLOAD_PROFILE"],filename)
+
+@app.route("/bio" , methods=["POST"])
+def bio():
+     bio=request.form["bio"]
+     if bio:
+          pass
+
+@app.route("/removepic" , methods=["POST"])
+def  removepic():
+       existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+       if existing_profile:
+            existing_profile.profile_pic=""
+            db1.session.commit()
+       else:
+            print("Error occured")
+       return redirect(url_for('profile'))
 
 
 @app.route("/qrcode")
 def qrcode():
      return render_template("qrcode.html")
-
-
-
-
-
-
 
 
 if __name__=="__main__":

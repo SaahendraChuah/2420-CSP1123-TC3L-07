@@ -30,9 +30,19 @@ body{
 .photo-frame{
     border: 5px solid black;
     border-width: 1cm ;
-    height: 10cm;
-    width: 10cm;
-    padding: 10px;
+    height: auto;
+    width: auto;
+    padding: 1px;
     display: inline-block;
+    border-radius: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    
+}
+
+.photo-frame img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
     border-radius: 10px;
 }
