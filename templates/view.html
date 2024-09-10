@@ -3,7 +3,7 @@
     <head>
        <meta  charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0 ">
-       <title>Search Results</title>
+       <title>{{user.username}}'s Profile</title>
        <link rel="stylesheet" href="{{url_for('static' , filename='style2.css')}}"> 
     </head>
 
@@ -11,24 +11,23 @@
 
 
 <body>
-    {% if search_results %}
-        {% for user in search_results %}
+  {{user.username}}'s Profile
+    
+        
           <div>
-             <h2>{{user.username}}</h2>
-             {% if user.profile_pic %}
-                <img src="{{url_for('static' , filename='uploads/'  + 'user.profile_pic')}}" alt="ProfilePhoto">
+             
+             {% if user.profile and user.profile.profile_pic %}
+                <img src="{{url_for('static' , filename='uploads/' + user.profile.profile_pic) }}" alt="ProfilePhoto">
              {% else %}
                <p>No profilephoto </p>
              {% endif %}
              
-            <p>{{user.bio}}</p>
+            <p>Bio:{{user.profile.bio}}</p>
          </div>
 
 
-        {% endfor %}
-    {% else %}
-    <p> No users found</p>
-    {% endif %}
+        
+    
 </body>
 
 

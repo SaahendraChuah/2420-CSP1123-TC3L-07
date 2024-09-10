@@ -1,4 +1,4 @@
-from flask import Flask , render_template , request , redirect   , url_for , send_from_directory
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
@@ -16,11 +16,7 @@ if not os.path.exists(directory):
 os.chmod(directory,0o777) 
 
 
-#db2=SQLAlchemy(app)
 
-
-#env=Environment(loader=jinja2.FileSystemLoader("templates/"))
-#template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
 app.config["SECRET_KEY"] = "happy_birthday" 
 app.config["UPLOAD_PROFILE"] = os.path.join(os.getcwd(), "static/uploads/")
@@ -68,19 +64,24 @@ with app.app_context():
 def search():
 
           search_query=request.args.get('search')
-          print(f"search query:{search_query}")
-          search_results=Profile.query.filter(Profile.user_name.contains(search_query)).all()
-          print(f"search results:{search_results}")
-          return render_template("view.html" , search_results=search_results  )
+          user=User.query.filter(User.username.contains(search_query)).first()
+          if user:
+               return redirect(url_for("view" , username=user.username))
+          else:
+               flash("User not found")
+               return redirect(url_for("main"))
+               
      
       
-@app.route("/profile/<username>")  
+@app.route("/user/<username>")
+@login_required
 def view(username):
-     print(f"Username:{username}")
-     user= Profile.query.filter_by(user_name=username).first_or_404()
-     print(f"User:{user}")
-     return render_template("profile.html" , user=user) 
+     user=User.query.filter_by(username=username).first_or_404()
+     return render_template("view.html", user=user)
 
+@app.route("/unauthorized")
+def unauthorized():
+     return "You are unauthorized to view this page" , 403
 
 @app.route("/")
 def test1():
