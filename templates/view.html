@@ -4,28 +4,31 @@
        <meta  charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0 ">
        <title>Search Results</title>
-       
+       <link rel="stylesheet" href="{{url_for('static' , filename='style2.css')}}"> 
     </head>
 
 
 
 
 <body>
-    
-    <h1>Search Results</h1>
+    {% if search_results %}
+        {% for user in search_results %}
+          <div>
+             <h2>{{user.username}}</h2>
+             {% if user.profile_pic %}
+                <img src="{{url_for('static' , filename='uploads/'  + 'user.profile_pic')}}" alt="ProfilePhoto">
+             {% else %}
+               <p>No profilephoto </p>
+             {% endif %}
+             
+            <p>{{user.bio}}</p>
+         </div>
 
-    {% if user %}
-    <ul>
-        {% for user in user %}
-        <li>{{user.username}}</li>
+
         {% endfor %}
-
-    </ul>
     {% else %}
-    <p>No such users</p>
+    <p> No users found</p>
     {% endif %}
-
-<a href="{{url_for('main')}}">Back to Search </a>
 </body>
 
 

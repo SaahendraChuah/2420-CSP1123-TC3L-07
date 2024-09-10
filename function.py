@@ -50,7 +50,7 @@ class Profile(db1.Model):
       user_name=db1.Column(db1.String(100) , db1.ForeignKey(User.username), nullable=False)
       profile_pic=db1.Column(db1.String(100), nullable=True)
       bio=db1.Column(db1.String(100) , nullable=True)
-
+      
 
 
 
@@ -64,18 +64,22 @@ with app.app_context():
      
      
 
-@app.route("/search" , methods=["GET" , "POST"])
+@app.route("/search")
 def search():
-     if request.method == "POST":
-          search_query=request.form.get("search")
-          search_results=User.query.filter(User.username.contains(search_query)).all()
-          return render_template("view.html" , user=search_results  )
-     else:
-          return render_template("main.html")
+
+          search_query=request.args.get('search')
+          print(f"search query:{search_query}")
+          search_results=Profile.query.filter(Profile.user_name.contains(search_query)).all()
+          print(f"search results:{search_results}")
+          return render_template("view.html" , search_results=search_results  )
+     
       
-@app.route("/view")  
-def view():
-     return render_template("view.html") 
+@app.route("/profile/<username>")  
+def view(username):
+     print(f"Username:{username}")
+     user= Profile.query.filter_by(user_name=username).first_or_404()
+     print(f"User:{user}")
+     return render_template("profile.html" , user=user) 
 
 
 @app.route("/")
@@ -188,11 +192,7 @@ def profile():
 def uploaded_file(filename):
      return send_from_directory(app.config["UPLOAD_PROFILE"],filename)
 
-@app.route("/bio" , methods=["POST"])
-def bio():
-     bio=request.form["bio"]
-     if bio:
-          pass
+
 
 @app.route("/removepic" , methods=["POST"])
 def  removepic():
