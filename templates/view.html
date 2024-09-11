@@ -12,19 +12,23 @@
 
 <body>
   {{user.username}}'s Profile
-    
-        
-          <div>
+  <h2><a href="{{url_for('main')}}">Go back to Main Page?</a></h2>
+    <div class="profile">
+        <div id="profilephoto">
+          
              
              {% if user.profile and user.profile.profile_pic %}
+             <div class="photo-frame">
                 <img src="{{url_for('static' , filename='uploads/' + user.profile.profile_pic) }}" alt="ProfilePhoto">
+             </div>
              {% else %}
                <p>No profilephoto </p>
              {% endif %}
              
             <p>Bio:{{user.profile.bio}}</p>
-         </div>
-
+         
+        </div>
+      </div>
 
         
     

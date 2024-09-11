@@ -24,29 +24,52 @@ db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-class User(UserMixin,db1.Model):
-       
-       
+class User(UserMixin, db1.Model):
+    student_id = db1.Column(db1.String(100), primary_key=True)  # contains value that is immutable
+    username = db1.Column(db1.String(100), unique=True, nullable=False)
+    email = db1.Column(db1.String(60), unique=True, nullable=False)
+    password = db1.Column(db1.String(100), nullable=False)  
+    phone_number = db1.Column(db1.String(20), unique=True, nullable=False)
+    profile = db1.relationship('Profile', backref='user', uselist=False)
+    Forum = db1.relationship('Forum', backref='user')
+    Comments = db1.relationship('Comments', backref='user')
 
-       student_id=db1.Column(db1.String(100) , primary_key=True) # contains value that is immutable
-       username=db1.Column(db1.String(100) , unique=True, nullable=False)
-       email=db1.Column(db1.String(60) ,unique=True, nullable=False)
-       password=db1.Column(db1.String(100) ,unique=True, nullable= False)
-       phone_number=db1.Column(db1.String(20),unique=True, nullable=False)
-       profile=db1.relationship('Profile' , backref='user', uselist=False)
+    def __str__(self):
+        return f"<User {self.username}>"
 
-       def __str__(self):
-            
-            return f"<User  {self.username}>"
-       def get_id(self):
-            return self.student_id
-       
+    def get_id(self):
+        return self.student_id
+
 class Profile(db1.Model):
-      id=db1.Column(db1.Integer, primary_key=True)
-      user_name=db1.Column(db1.String(100) , db1.ForeignKey(User.username), nullable=False)
-      profile_pic=db1.Column(db1.String(100), nullable=True)
-      bio=db1.Column(db1.String(100) , nullable=True)
-      
+    id = db1.Column(db1.Integer, primary_key=True)
+    user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    profile_pic = db1.Column(db1.String(100), nullable=True)
+    bio = db1.Column(db1.String(100), nullable=True)
+
+    def __str__(self):
+        return f"<Profile {self.user_name}>"
+
+class Forum(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    title = db1.Column(db1.String(100), nullable=False)
+    content = db1.Column(db1.Text, nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    forum_comments = db1.relationship('Comments', backref=db1.backref('comment_forum', lazy=True))
+
+    def __str__(self):
+        return f"<Forum {self.title}>"
+
+class Comments(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    content = db1.Column(db1.Text, nullable=False)
+    forum_id = db1.Column(db1.Integer, db1.ForeignKey('forum.id'), nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+
+    forum = db1.relationship('Forum', backref=db1.backref('comments', lazy=True))
+    comment_user = db1.relationship('User', backref=db1.backref('user_comments', lazy=True))
+
+    def __str__(self):
+        return f"<Comment {self.content}>"
 
 
 
@@ -59,12 +82,13 @@ with app.app_context():
      db1.create_all()
      
      
+     
 
 @app.route("/search")
 def search():
 
           search_query=request.args.get('search')
-          user=User.query.filter(User.username.contains(search_query)).first()
+          user=User.query.filter_by(username=search_query).first()
           if user:
                return redirect(url_for("view" , username=user.username))
           else:
@@ -211,5 +235,46 @@ def qrcode():
      return render_template("qrcode.html")
 
 
-if __name__=="__main__":
+
+
+ 
+
+
+
+@app.route('/forum')
+def forum():
+    posts = Forum.query.all()
+    return render_template('forum.html', posts=posts)
+
+@app.route('/add_post', methods=['POST'])
+@login_required
+def add_post():
+    title = request.form['title']
+    content = request.form['content']
+    new_post = Forum(title=title, content=content, username=current_user.username)
+    db1.session.add(new_post)
+    db1.session.commit()
+    return redirect(url_for('forum'))
+
+@app.route('/add_comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    content = request.form['comment']
+    new_comment = Comments(content=content, forum_id=post_id, username=current_user.username)
+    db1.session.add(new_comment)
+    db1.session.commit()
+    return redirect(url_for('forum'))
+
+if __name__ == '__main__':
     app.run(debug=True)
+    
+
+
+
+
+
+
+
+
+
+

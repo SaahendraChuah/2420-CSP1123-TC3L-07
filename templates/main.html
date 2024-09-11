@@ -13,7 +13,15 @@
 
 </head>
 <body>
-    {% block  content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     
     <nav>
         
@@ -35,13 +43,13 @@
             <li>               
                 <a href="#"><i class="fa-solid fa-globe"></i>Network</a>
                 <ul class="dropdown">
-                    <li><a href="#"><i class="fab fa-forumbee"></i>Forum</a></li>
+                    <li><a href="{{url_for('forum')}}"><i class="fab fa-forumbee"></i>Forum</a></li>
                     <li><a href="#"><i class="fa-solid fa-message"></i>Chat</a></li>
                 </ul>
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>
             <li><a href="{{url_for('logout')}}"><i class="fa-solid fa-lock"></i>Logout</a></li>
-            {% endblock %}
+            
         </ul>
     </nav>
 </body>
