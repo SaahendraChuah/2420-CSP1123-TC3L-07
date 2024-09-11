@@ -1,43 +1,75 @@
-from flask import Flask , render_template , request , redirect   , url_for
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
-from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user 
+from werkzeug.utils import secure_filename,send_file
+import os
+from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
+directory= 'C:\\Users\\User\\OneDrive\\Desktop\\2420-CSP1123-TC3L-07\\static\\uploads\\'
+if not os.path.exists(directory):
+     os.makedirs(directory)
+os.chmod(directory,0o777) 
 
 
-#db2=SQLAlchemy(app)
 
-
-#env=Environment(loader=jinja2.FileSystemLoader("templates/"))
-#template=env.get_template("register.html")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
 app.config["SECRET_KEY"] = "happy_birthday" 
+app.config["UPLOAD_PROFILE"] = os.path.join(os.getcwd(), "static/uploads/")
 db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-class User(UserMixin,db1.Model):
-       
-       
+class User(UserMixin, db1.Model):
+    student_id = db1.Column(db1.String(100), primary_key=True)  # contains value that is immutable
+    username = db1.Column(db1.String(100), unique=True, nullable=False)
+    email = db1.Column(db1.String(60), unique=True, nullable=False)
+    password = db1.Column(db1.String(100), nullable=False)  
+    phone_number = db1.Column(db1.String(20), unique=True, nullable=False)
+    profile = db1.relationship('Profile', backref='user', uselist=False)
+    Forum = db1.relationship('Forum', backref='user')
+    Comments = db1.relationship('Comments', backref='user')
 
-       student_id=db1.Column(db1.String(100) , primary_key=True) # contains value that is immutable
-       username=db1.Column(db1.String(100) , nullable=False)
-       email=db1.Column(db1.String(60) ,unique=True, nullable=False)
-       password=db1.Column(db1.String(100) ,unique=True, nullable= False)
-       phone_number=db1.Column(db1.String(20), nullable=False)
+    def __str__(self):
+        return f"<User {self.username}>"
 
-       def __str__(self):
-            
-            return f"<User  {self.username}>"
-       def get_id(self):
-            return self.student_id
-       
+    def get_id(self):
+        return self.student_id
 
+class Profile(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    profile_pic = db1.Column(db1.String(100), nullable=True)
+    bio = db1.Column(db1.String(100), nullable=True)
+
+    def __str__(self):
+        return f"<Profile {self.user_name}>"
+
+class Forum(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    title = db1.Column(db1.String(100), nullable=False)
+    content = db1.Column(db1.Text, nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    forum_comments = db1.relationship('Comments', backref=db1.backref('comment_forum', lazy=True))
+
+    def __str__(self):
+        return f"<Forum {self.title}>"
+
+class Comments(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    content = db1.Column(db1.Text, nullable=False)
+    forum_id = db1.Column(db1.Integer, db1.ForeignKey('forum.id'), nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+
+    forum = db1.relationship('Forum', backref=db1.backref('comments', lazy=True))
+    comment_user = db1.relationship('User', backref=db1.backref('user_comments', lazy=True))
+
+    def __str__(self):
+        return f"<Comment {self.content}>"
 
 
 
@@ -49,20 +81,31 @@ def user_loading(user_id):
 with app.app_context():
      db1.create_all()
      
+     
+     
 
-@app.route("/search" , methods=["GET" , "POST"])
+@app.route("/search")
 def search():
-     if request.method == "POST":
-          search_query=request.form.get("search")
-          search_results=User.query.filter(User.username.contains(search_query)).all()
-          return render_template("view.html" , user=search_results  )
-     else:
-          return render_template("main.html")
-      
-@app.route("/view")  
-def view():
-     return render_template("view.html") 
 
+          search_query=request.args.get('search')
+          user=User.query.filter_by(username=search_query).first()
+          if user:
+               return redirect(url_for("view" , username=user.username))
+          else:
+               flash("User not found")
+               return redirect(url_for("main"))
+               
+     
+      
+@app.route("/user/<username>")
+@login_required
+def view(username):
+     user=User.query.filter_by(username=username).first_or_404()
+     return render_template("view.html", user=user)
+
+@app.route("/unauthorized")
+def unauthorized():
+     return "You are unauthorized to view this page" , 403
 
 @app.route("/")
 def test1():
@@ -137,9 +180,54 @@ def logout():
      
 
      
-@app.route("/profile" )
+@app.route("/profile", methods=["GET" , "POST"])
 def profile():
-     return render_template("profile.html")
+     if request.method == "POST":
+         profile_pic=request.files["profilephoto"]
+         bio=request.form["bio"]
+
+         if profile_pic:
+              filename=secure_filename(profile_pic.filename)  #securing the file
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
+              existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.profile_pic = filename
+                   existing_profile.bio = bio
+              else:
+                   new_profile=Profile(user_name=current_user.username,profile_pic=filename,bio=bio)
+                   db1.session.add(new_profile)
+                   
+              db1.session.commit()
+              return redirect(url_for('profile'))      
+    
+         else:
+              existing_profile= Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.bio = bio
+              else:    
+                  new_profile=Profile(user_name=current_user.username,bio=bio)
+                  db1.session.add(new_profile)
+     
+         db1.session.commit()
+         return redirect(url_for('profile'))   
+     else:
+       return render_template("profile.html" , user=current_user)
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+     return send_from_directory(app.config["UPLOAD_PROFILE"],filename)
+
+
+
+@app.route("/removepic" , methods=["POST"])
+def  removepic():
+       existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+       if existing_profile:
+            existing_profile.profile_pic=""
+            db1.session.commit()
+       else:
+            print("Error occured")
+       return redirect(url_for('profile'))
 
 
 @app.route("/qrcode")
@@ -149,9 +237,44 @@ def qrcode():
 
 
 
+ 
 
 
 
+@app.route('/forum')
+def forum():
+    posts = Forum.query.all()
+    return render_template('forum.html', posts=posts)
 
-if __name__=="__main__":
+@app.route('/add_post', methods=['POST'])
+@login_required
+def add_post():
+    title = request.form['title']
+    content = request.form['content']
+    new_post = Forum(title=title, content=content, username=current_user.username)
+    db1.session.add(new_post)
+    db1.session.commit()
+    return redirect(url_for('forum'))
+
+@app.route('/add_comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    content = request.form['comment']
+    new_comment = Comments(content=content, forum_id=post_id, username=current_user.username)
+    db1.session.add(new_comment)
+    db1.session.commit()
+    return redirect(url_for('forum'))
+
+if __name__ == '__main__':
     app.run(debug=True)
+    
+
+
+
+
+
+
+
+
+
+
