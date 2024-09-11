@@ -29,14 +29,14 @@
             <li>
                 <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
                 <ul class="dropdown">
-                    <li><a href="{{url_for('qrcode')}}">You Are Logged In As {{user.username}}</a></li>
+                    <li><a href="{{url_for('profile')}}">You Are Logged In As {{user.username}}</a></li>
                 </ul>
             <li>
             <li>               
                 <a href="#"><i class="fa-solid fa-globe"></i>Network</a>
                 <ul class="dropdown">
                     <li><a href="#"><i class="fab fa-forumbee"></i>Forum</a></li>
-                    <li><a href="#"><i class="fa-solid fa-message"></i>Chat</a></li>
+                    <li><a href="{{url_for('chat')}}"><i class="fa-solid fa-message"></i>Chat</a></li>
                 </ul>
             </li>
             <li><a href="#"><i class="fa-solid fa-eye"></i>About</a></li>

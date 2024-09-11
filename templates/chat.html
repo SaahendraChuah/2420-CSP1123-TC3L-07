@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Messaging System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e0f7fa; /* Light blue background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            margin: 20px;
+            color: #01579b; /* Dark blue color for the heading */
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            box-sizing: border-box;
+            border: 2px solid #00796b; /* Teal border for the container */
+        }
+        .messages {
+            margin-top: 20px; /* Adjust margin to ensure messages appear below the form */
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #00796b; /* Teal border for the messages area */
+            border-radius: 8px;
+            padding: 10px;
+            background: #b2dfdb; /* Light teal background for messages */
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #ffebee; /* Light red background for individual messages */
+        }
+        .username {
+            font-weight: bold;
+            color: #c62828; /* Dark red color for username */
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #00796b; /* Teal color for labels */
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #00796b; /* Teal border for inputs */
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            background-color: #c62828; /* Dark red background for the button */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #b71c1c; /* Slightly darker red for hover effect */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Private Messaging System</h1>
+        
+        <form action="{{ url_for('select_user') }}" method="post">
+            <div class="form-group">
+                <label for="selected_user">Select User to Chat With:</label>
+                <select id="selected_user" name="selected_user" required>
+                    {% for user in users %}
+                        <option value="{{ user.username }}" {% if user.username == selected_user %}selected{% endif %}>{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Select</button>
+        </form>
+
+        <form action="{{ url_for('send') }}" method="post">
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Send</button>
+        </form>
+        
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">
+                    <span class="username">{{ message.sender_username }} to {{ message.receiver_username }}:</span>
+                    <span>{{ message.content }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <p><a href="{{url_for('main')}}">Go back to main page?</a></p>
+    </body>
+</html>
+
+
+
+
+
+
+

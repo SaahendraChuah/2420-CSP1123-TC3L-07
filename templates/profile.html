@@ -22,16 +22,22 @@
       </div>
 
     
-    <div id="qrcode">
-        <h1><u>Unique Qr Code Profile</u></h1>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://www.example.com" alt="QR Code">
-        <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
-        <p>Qr Code Is Unique For Every User</p>
+    <div id="qrcode" >
+        <form action="/qrcode">
+           <h1><u>Unique Qr Code Profile</u></h1>
+           <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code">
+           <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
+           <p>Qr Code Is Unique For Every User</p>
+           <p>Your Name: {{ user.username }}</p>
+           <p>Your Email: {{ user.email }}</p>
+           <p>Your Phone Number: {{ user.phone_number }}</p>
+        </form>
     </div>
 
 
     
     </div>
+
     
 </body>
 
