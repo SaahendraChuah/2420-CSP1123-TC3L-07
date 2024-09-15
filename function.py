@@ -1,4 +1,4 @@
-from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash 
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename,send_file
 import os
-from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
+from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required 
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -187,14 +187,16 @@ def profile():
          bio=request.form["bio"]
 
          if profile_pic:
+              
               filename=secure_filename(profile_pic.filename)  #securing the file
-              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
+              new_filename=f"{current_user.username}_{filename}"
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], new_filename) )
               existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
               if existing_profile:
-                   existing_profile.profile_pic = filename
+                   existing_profile.profile_pic = new_filename
                    existing_profile.bio = bio
               else:
-                   new_profile=Profile(user_name=current_user.username,profile_pic=filename,bio=bio)
+                   new_profile=Profile(user_name=current_user.username,profile_pic=new_filename,bio=bio)
                    db1.session.add(new_profile)
                    
               db1.session.commit()
