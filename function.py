@@ -1,4 +1,5 @@
 from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash 
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash , session
 import jinja2
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
@@ -7,6 +8,8 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename,send_file
 import os
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required 
+from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
+from datetime import datetime
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -39,6 +42,15 @@ class User(UserMixin, db1.Model):
 
     def get_id(self):
         return self.student_id
+class Message(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    sender_username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    receiver_username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    content = db1.Column(db1.Text, nullable=False)
+    timestamp = db1.Column(db1.DateTime, default=db1.func.now())
+
+    sender = db1.relationship('User' , foreign_keys=[sender_username], backref='sent_messages')
+    receiver = db1.relationship('User', foreign_keys=[receiver_username], backref='received_messages')
 
 class Profile(db1.Model):
     id = db1.Column(db1.Integer, primary_key=True)
@@ -48,6 +60,8 @@ class Profile(db1.Model):
 
     def __str__(self):
         return f"<Profile {self.user_name}>"
+    
+
 
 class Forum(db1.Model):
     id = db1.Column(db1.Integer, primary_key=True)
@@ -189,8 +203,7 @@ def profile():
          if profile_pic:
               
               filename=secure_filename(profile_pic.filename)  #securing the file
-              new_filename=f"{current_user.username}_{filename}"
-              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], new_filename) )
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
               existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
               if existing_profile:
                    existing_profile.profile_pic = new_filename
@@ -266,6 +279,41 @@ def add_comment(post_id):
     db1.session.add(new_comment)
     db1.session.commit()
     return redirect(url_for('forum'))
+
+
+@app.route('/chat')
+@login_required
+def chat():
+    users = User.query.all()
+    selected_user = session.get('selected_user')
+    if selected_user:
+        messages = Message.query.filter(
+            ((Message.sender_username == current_user.username) & (Message.receiver_username == selected_user)) |
+            ((Message.sender_username == selected_user) & (Message.receiver_username == current_user.username))
+        ).all()
+    else:
+        messages = []
+    return render_template('chat.html', users=users, messages=messages, current_user=current_user, selected_user=selected_user)
+
+
+@app.route('/select_user', methods=['POST'])
+@login_required
+def select_user():
+    selected_user = request.form.get('selected_user')
+    session['selected_user'] = selected_user
+    return redirect(url_for('chat'))
+
+@app.route('/send', methods=['POST'])
+@login_required
+def send():
+    receiver_username = session.get('selected_user')
+    message_text = request.form.get('message')
+    if receiver_username and message_text:
+        new_message = Message(sender_username=current_user.username, receiver_username=receiver_username, content=message_text)
+        db1.session.add(new_message)
+        db1.session.commit()
+    return redirect(url_for('chat'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
