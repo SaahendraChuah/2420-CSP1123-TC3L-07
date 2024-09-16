@@ -12,9 +12,9 @@ app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
 directory= 'C:\\Users\\User\\OneDrive\\Desktop\\2420-CSP1123-TC3L-07\\static\\uploads\\'
-if not os.path.exists(directory):
-     os.makedirs(directory)
-os.chmod(directory,0o777) 
+#if not os.path.exists(directory):
+     #os.makedirs(directory)
+#os.chmod(directory,0o777) 
 
 
 
