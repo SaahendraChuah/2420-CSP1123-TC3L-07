@@ -33,7 +33,6 @@ class User(UserMixin,db1.Model):
        email=db1.Column(db1.String(60) ,unique=True, nullable=False)
        password=db1.Column(db1.String(100) ,unique=True, nullable= False)
        phone_number=db1.Column(db1.String(20), nullable=False)
-       qr_code=db1.relationship('QrCode' , backref='user' , uselist=False)
 
        def _str_(self):
             
@@ -44,7 +43,6 @@ class User(UserMixin,db1.Model):
 class QrCode(db1.Model):
      id=db1.Column(db1.Integer , primary_key=True)
      user_name=db1.Column(db1.String(100) , db1.ForeignKey(User.username) , nullable=False)
-     qr_code=db1.Column(db1.String(900) , unique=True , nullable=False) #to store qrcode url
 
 
 

@@ -42,10 +42,6 @@ class User(UserMixin,db1.Model):
        def get_id(self):
             return self.student_id
        
-class QrCode(db1.Model):
-     id=db1.Column(db1.Integer , primary_key=True)
-     user_name=db1.Column(db1.String(100) , db1.ForeignKey(User.username) , nullable=False)
-     qr_code=db1.Column(db1.String(900) , unique=True , nullable=False) #to store qrcode url
 
 
 class Message(db1.Model):
@@ -62,7 +58,16 @@ class Message(db1.Model):
 
 
 class Profile(User,db1.Model):
-     profile_pic=db1.Column
+     id = db1.Column(db1.Integer, primary_key=True)
+     user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username') , nullable=False)
+     profile_pic = db1.Column(db1.String(100), nullable=False)
+     bio = db1.Column(db1.String(100), nullable=True)
+     qrcode = db1.Column(db1.String(255), nullable=False)
+
+     def _str_ (self):
+          return f"<Profile {self.user_name}>"
+
+
 
 
 
