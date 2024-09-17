@@ -6,6 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename,send_file
 import os
+import qrcode
+import base64
+from io import BytesIO
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 from datetime import datetime
 app=Flask(__name__)
@@ -55,6 +58,7 @@ class Profile(db1.Model):
     user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
     profile_pic = db1.Column(db1.String(100), nullable=True)
     bio = db1.Column(db1.String(100), nullable=True)
+    qrcode= db1.Column(db1.String(100) , nullable=False)
 
     def __str__(self):
         return f"<Profile {self.user_name}>"
@@ -191,7 +195,12 @@ def logout():
        return redirect(url_for('login'))
      
 
-     
+def generate_qrcode(user_name):
+    base_url = "http://127.0.0.1:5000/user/"
+    user_profile_url = f"{base_url}{user_name}"
+    return f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={user_profile_url}"
+
+
 @app.route("/profile", methods=["GET" , "POST"])
 def profile():
      if request.method == "POST":
@@ -199,14 +208,17 @@ def profile():
          bio=request.form["bio"]
 
          if profile_pic:
+              
               filename=secure_filename(profile_pic.filename)  #securing the file
-              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
+              new_filename=f"{current_user.username}_{filename}"
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], new_filename) )
               existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
               if existing_profile:
-                   existing_profile.profile_pic = filename
+                   existing_profile.profile_pic = new_filename
                    existing_profile.bio = bio
               else:
-                   new_profile=Profile(user_name=current_user.username,profile_pic=filename,bio=bio)
+                   qrcode_url=generate_qrcode(current_user.username)
+                   new_profile=Profile(user_name=current_user.username,profile_pic=new_filename,bio=bio ,qrcode=qrcode_url)
                    db1.session.add(new_profile)
                    
               db1.session.commit()
@@ -216,7 +228,8 @@ def profile():
               existing_profile= Profile.query.filter_by(user_name=current_user.username).first()
               if existing_profile:
                    existing_profile.bio = bio
-              else:    
+              else: 
+                  qrcode_url=generate_qrcode(current_user.username)   
                   new_profile=Profile(user_name=current_user.username,bio=bio)
                   db1.session.add(new_profile)
      
@@ -244,7 +257,7 @@ def  removepic():
 
 @app.route("/qrcode")
 def qrcode():
-     return render_template("qrcode.html")
+     pass
 
 
 
