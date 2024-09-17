@@ -29,7 +29,7 @@
             <li>
                 <a href="#"><i class="fa-solid fa-user"></i>Profile</a>
                 <ul class="dropdown">
-                    <li><a href="{{url_for('profile')}}">You Are Logged In As {{user.username}}</a></li>
+                    <li><a href="{{url_for('profile' , username=current_user.username)}}">You Are Logged In As {{user.username}}</a></li>
                 </ul>
             <li>
             <li>               
