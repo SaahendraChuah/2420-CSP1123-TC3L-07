@@ -195,10 +195,6 @@ def logout():
        return redirect(url_for('login'))
      
 
-def generate_qrcode(user_name):
-    base_url = "http://127.0.0.1:5000/user/"
-    user_profile_url = f"{base_url}{user_name}"
-    return f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={user_profile_url}"
 
 
 @app.route("/profile", methods=["GET" , "POST"])
@@ -217,8 +213,8 @@ def profile():
                    existing_profile.profile_pic = new_filename
                    existing_profile.bio = bio
               else:
-                   qrcode_url=generate_qrcode(current_user.username)
-                   new_profile=Profile(user_name=current_user.username,profile_pic=new_filename,bio=bio ,qrcode=qrcode_url)
+                   
+                   new_profile=Profile(user_name=current_user.username,profile_pic=new_filename,bio=bio )
                    db1.session.add(new_profile)
                    
               db1.session.commit()
@@ -229,7 +225,7 @@ def profile():
               if existing_profile:
                    existing_profile.bio = bio
               else: 
-                  qrcode_url=generate_qrcode(current_user.username)   
+                   
                   new_profile=Profile(user_name=current_user.username,bio=bio)
                   db1.session.add(new_profile)
      
