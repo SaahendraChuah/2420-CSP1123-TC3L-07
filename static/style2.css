@@ -46,3 +46,31 @@ body{
     object-fit: cover;
     border-radius: 10px;
 }
+
+.profile-nav a{
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: yellow;
+    color: white;
+    border-radius: 5px;
+}
+
+.profile-nav{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+
+
+#profile-section :target,#friend-section:target{
+    display: block;
+}
+
+#profile-section, #friend-section{
+    display: none;
+}
+
+.profile:target{
+    display: block;
+}
