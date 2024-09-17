@@ -96,6 +96,7 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
+     db1.drop_all()
      
      
      
@@ -223,6 +224,15 @@ def profile():
               else:    
                   new_profile=Profile(user_name=current_user.username,bio=bio)
                   db1.session.add(new_profile)
+               
+            # Generate and save QR code
+               # Generate and save QR code using the username
+              username = current_user.username
+              qr_code_url = generate_qr_code(username)
+              qr_code_filename = os.path.basename(qr_code_url)
+              existing_profile.qr_code_url = qr_code_filename
+
+
      
          db1.session.commit()
          return redirect(url_for('profile'))   
@@ -316,8 +326,8 @@ def send():
         db1.session.commit()
     return redirect(url_for('chat'))
 
-def generate_qr_code(user_id, base_url='http://yourapp.com/profile/'):
-    url = f"{base_url}{user_id}"
+def generate_qr_code(username, base_url='http://localhost:5000/profile/'):
+    url = f"{base_url}{username}"
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -328,7 +338,7 @@ def generate_qr_code(user_id, base_url='http://yourapp.com/profile/'):
     qr.make(fit=True)
 
     img = qr.make_image(fill='black', back_color='white')
-    file_path = os.path.join('static/uploads', f"{user_id}_qr.png")
+    file_path = os.path.join('static/uploads', f"{username}_qr.png")
     img.save(file_path)
     return file_path
 
