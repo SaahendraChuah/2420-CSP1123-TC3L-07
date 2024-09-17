@@ -334,5 +334,5 @@ def generate_qr_code(user_id, base_url='http://yourapp.com/profile/'):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000 , debug=True)
 
