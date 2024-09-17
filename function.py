@@ -6,6 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename,send_file
 import os
+import qrcode
+import base64
+from io import BytesIO
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 from datetime import datetime
 app=Flask(__name__)

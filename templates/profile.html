@@ -8,6 +8,7 @@
 </head>
 <body>
   <h2><a href="{{url_for('main')}}">Go back To Main Page?</a></h2>
+  
     <div class="profile">
       <div id="profilephoto">
        <form action="{{url_for('profile')}}"    method="post" enctype="multipart/form-data">
@@ -40,22 +41,27 @@
       </div>
 
     
-    <div id="qrcode" >
-        <form action="/qrcode">
-           <h1><u>Unique Qr Code Profile</u></h1>
-           <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code">
-           <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
-           <p>Qr Code Is Unique For Every User</p>
-           <p>Your Name: {{ user.username }}</p>
-           <p>Your Email: {{ user.email }}</p>
-           <p>Your Phone Number: {{ user.phone_number }}</p>
-        </form>
+    <div id="qrcode">
+        <h1><u>Unique Qr Code Profile</u></h1>
+        {% if user.profile and user.profile.qrcode %}
+             <img src="{{user.profile.qrcode}}" alt="QR Code">
+        {% else %}
+            <p>No QR code available</p>
+        {% endif %}
+        <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
+        <p>Qr Code Is Unique For Every User</p>
     </div>
 
 
     
     </div>
 
+ <div class="friends" id="friend-section">
+  <ul>
+    <li>Friends</li>
+  </ul>
+
+ </div>
     
 </body>
 

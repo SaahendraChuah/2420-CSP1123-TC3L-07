@@ -1,179 +1,285 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash , session
 import jinja2
-from flask_sqlalchemy import SQLAlchemy
+#from jinja2 import Environment,FileSystemLoader
+from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
-from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+from werkzeug.utils import secure_filename,send_file
+import os
 import qrcode
 import base64
 from io import BytesIO
+from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 from datetime import datetime
-
-app = Flask(__name__)
-login_manager = LoginManager()
+app=Flask(__name__)
+login_manager=LoginManager()
 login_manager.init_app(app)
+directory= 'C:\\Users\\User\\OneDrive\\Desktop\\2420-CSP1123-TC3L-07\\static\\uploads\\'
+#if not os.path.exists(directory):
+     #os.makedirs(directory)
+#os.chmod(directory,0o777) 
+
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
-app.config["SECRET_KEY"] = "happy_birthday"
-db1 = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+app.config["SECRET_KEY"] = "happy_birthday" 
+app.config["UPLOAD_PROFILE"] = os.path.join(os.getcwd(), "static/uploads/")
+db1=SQLAlchemy(app)
+bcrypt=Bcrypt(app)
 
 
 class User(UserMixin, db1.Model):
-    student_id = db1.Column(db1.String(100), primary_key=True)
+    student_id = db1.Column(db1.String(100), primary_key=True)  # contains value that is immutable
     username = db1.Column(db1.String(100), unique=True, nullable=False)
     email = db1.Column(db1.String(60), unique=True, nullable=False)
-    password = db1.Column(db1.String(100), unique=True, nullable=False)
-    phone_number = db1.Column(db1.String(20), nullable=False)
+    password = db1.Column(db1.String(100), nullable=False)  
+    phone_number = db1.Column(db1.String(20), unique=True, nullable=False)
+    profile = db1.relationship('Profile', backref='user', uselist=False)
+    Forum = db1.relationship('Forum', backref='user')
+    Comments = db1.relationship('Comments', backref='user')
 
     def __str__(self):
         return f"<User {self.username}>"
-
+            
     def get_id(self):
         return self.student_id
-
-
+       
 class Message(db1.Model):
     id = db1.Column(db1.Integer, primary_key=True)
     sender_username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
     receiver_username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
     content = db1.Column(db1.Text, nullable=False)
     timestamp = db1.Column(db1.DateTime, default=db1.func.now())
-
-    sender = db1.relationship('User', foreign_keys=[sender_username], backref='sent_messages')
+    sender = db1.relationship('User' , foreign_keys=[sender_username], backref='sent_messages')
     receiver = db1.relationship('User', foreign_keys=[receiver_username], backref='received_messages')
-
 
 class Profile(db1.Model):
     id = db1.Column(db1.Integer, primary_key=True)
     user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
-    profile_pic = db1.Column(db1.String(100), nullable=False)
+    profile_pic = db1.Column(db1.String(100), nullable=True)
     bio = db1.Column(db1.String(100), nullable=True)
 
     def __str__(self):
         return f"<Profile {self.user_name}>"
+    
+
+
+class Forum(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    title = db1.Column(db1.String(100), nullable=False)
+    content = db1.Column(db1.Text, nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+    forum_comments = db1.relationship('Comments', backref=db1.backref('comment_forum', lazy=True))
+
+    def __str__(self):
+        return f"<Forum {self.title}>"
+
+class Comments(db1.Model):
+    id = db1.Column(db1.Integer, primary_key=True)
+    content = db1.Column(db1.Text, nullable=False)
+    forum_id = db1.Column(db1.Integer, db1.ForeignKey('forum.id'), nullable=False)
+    username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
+
+    forum = db1.relationship('Forum', backref=db1.backref('comments', lazy=True))
+    comment_user = db1.relationship('User', backref=db1.backref('user_comments', lazy=True))
+
+    def __str__(self):
+        return f"<Comment {self.content}>"
+
 
 
 @login_manager.user_loader
 def user_loading(user_id):
-    return User.query.get(user_id)
+     return User.query.get(user_id)
 
 
 with app.app_context():
-    db1.create_all()
+     db1.create_all()
+     
+     
+     
 
-
-@app.route("/search", methods=["GET", "POST"])
+@app.route("/search")
 def search():
-    if request.method == "POST":
-        search_query = request.form.get("search")
-        search_results = User.query.filter(User.username.contains(search_query)).all()
-        return render_template("view.html", user=search_results)
-    else:
-        return render_template("main.html")
 
+          search_query=request.args.get('search')
+          user=User.query.filter_by(username=search_query).first()
+          if user:
+               return redirect(url_for("view" , username=user.username))
+          else:
+               flash("User not found")
+               return redirect(url_for("main"))
+               
+     
+      
+@app.route("/user/<username>")
+@login_required
+def view(username):
+     user=User.query.filter_by(username=username).first_or_404()
+     return render_template("view.html", user=user)
 
-@app.route("/view")
-def view():
-    return render_template("view.html")
-
+@app.route("/unauthorized")
+def unauthorized():
+     return "You are unauthorized to view this page" , 403
 
 @app.route("/")
 def test1():
-    return "Hello"
-
+     return "Hello"
 
 @app.route("/check_db")
 def check_db():
-    users = User.query.all()
-    return f"Users : {users}"
+     users=User.query.all()
+     return f"Users : {users}"
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register" , methods=["GET" ,"POST"])
 def register():
-    if request.method == "POST":
-        username_data = request.form["username"]
-        id_data = request.form["id"]
-        email_data = request.form["email"]
-        password_data = request.form["password"]
-        number_data = request.form["number"]
-        secured_password = bcrypt.generate_password_hash(password_data).decode("utf-8")
+     if request.method=="POST":
+          username_data=request.form["username"]
+          id_data=request.form["id"]
+          email_data=request.form["email"]
+          password_data=request.form["password"]
+          number_data=request.form["number"]
+          secured_password=bcrypt.generate_password_hash(password_data).decode("utf-8")
 
-        try:
-            input_data = User(student_id=id_data, username=username_data, email=email_data, password=secured_password, phone_number=number_data)
-            db1.session.add(input_data)
-            db1.session.commit()
+          try:
+           input_data=User(student_id=id_data , username=username_data , email=email_data , password=secured_password , phone_number=number_data)
+           db1.session.add(input_data)
+           db1.session.commit()
 
-            return redirect("/login")
+           return redirect("/login")
+          
+          except IntegrityError:
+               db1.session.rollback()
+               return ("You already have an existing account.")
+               
+               
+     else:
+          return render_template("register.html")
 
-        except IntegrityError:
-            db1.session.rollback()
-            return ("You already have an existing account.")
 
-    else:
-        return render_template("register.html")
+    
 
-
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login" , methods = ["GET" , "POST"])
 def login():
     if request.method == "POST":
-        student_id_data = request.form["id"]
-        username_data = request.form["username"]
-        password_data = request.form["password"]
+         student_id_data = request.form["id"]
+         username_data= request.form["username"]
+         password_data= request.form["password"]
 
-        user_register = User.query.filter_by(username=username_data).first()
-
-        if user_register and bcrypt.check_password_hash(user_register.password, password_data):
-            login_user(user_register)
-            return redirect("/main")
-        else:
-            return redirect("/login")
+         
+         user_register=User.query.filter_by(username=username_data).first()
+         
+         if user_register and bcrypt.check_password_hash(user_register.password,password_data):
+              login_user(user_register)
+              return redirect("/main")
+         else:
+              
+              return redirect ("/login")
     else:
-        return render_template("login.html")
+         
+         return render_template("login.html")
 
-
-@app.route("/main")
+@app.route("/main")    
 def main():
-    return render_template("main.html", user=current_user)
+     
+     return render_template("main.html", user=current_user)
 
 
-@app.route("/logout", methods=["GET", "POST"])
+
+
+@app.route("/logout" , methods=["GET" , "POST"])
 def logout():
-    logout_user()
-    return redirect(url_for('login'))
+       logout_user()
+       return redirect(url_for('login'))
+     
+
+     
+@app.route("/profile", methods=["GET" , "POST"])
+def profile():
+     if request.method == "POST":
+         profile_pic=request.files["profilephoto"]
+         bio=request.form["bio"]
+
+         if profile_pic:
+              filename=secure_filename(profile_pic.filename)  #securing the file
+              profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], filename) )
+              existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.profile_pic = filename
+                   existing_profile.bio = bio
+              else:
+                   new_profile=Profile(user_name=current_user.username,profile_pic=filename,bio=bio)
+                   db1.session.add(new_profile)
+                   
+              db1.session.commit()
+              return redirect(url_for('profile'))      
+    
+         else:
+              existing_profile= Profile.query.filter_by(user_name=current_user.username).first()
+              if existing_profile:
+                   existing_profile.bio = bio
+              else:    
+                  new_profile=Profile(user_name=current_user.username,bio=bio)
+                  db1.session.add(new_profile)
+     
+         db1.session.commit()
+         return redirect(url_for('profile'))   
+     else:
+       return render_template("profile.html" , user=current_user)
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+     return send_from_directory(app.config["UPLOAD_PROFILE"],filename)
 
 
-@app.route("/profile/<username>")
-def profile(username):
-    user = User.query.filter_by(username=username).first()
-    if user:
-        return render_template("profile.html", user=user)
-    else:
-        return "User not found", 404
 
-def generate_qr():
-    # URL for the user's profile page
-    profile_url = url_for('profile', username=current_user.username, _external=True)
-    
-    qr = qrcode.QRCode(version=1, box_size=10, border=4)
-    qr.add_data(profile_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill='black', back_color='white')
-    
-    buf = BytesIO()
-    img.save(buf, format='PNG')
-    buf.seek(0)
-    
-    qr_code_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    
-    # Save the QR code to the database
-    profile = Profile.query.filter_by(user_name=current_user.username).first()
-    if profile:
-        profile.qrcode = qr_code_base64
-        db1.session.commit()
-    
-    return render_template('profile.html', qr_code_base64=qr_code_base64, user=current_user)
+@app.route("/removepic" , methods=["POST"])
+def  removepic():
+       existing_profile=Profile.query.filter_by(user_name=current_user.username).first()
+       if existing_profile:
+            existing_profile.profile_pic=""
+            db1.session.commit()
+       else:
+            print("Error occured")
+       return redirect(url_for('profile'))
 
+
+@app.route("/profilephoto")
+def profilephoto():
+     pass
+
+
+
+
+
+ 
+
+
+
+@app.route('/forum')
+def forum():
+    posts = Forum.query.all()
+    return render_template('forum.html', posts=posts)
+
+@app.route('/add_post', methods=['POST'])
+@login_required
+def add_post():
+    title = request.form['title']
+    content = request.form['content']
+    new_post = Forum(title=title, content=content, username=current_user.username)
+    db1.session.add(new_post)
+    db1.session.commit()
+    return redirect(url_for('forum'))
+
+@app.route('/add_comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    content = request.form['comment']
+    new_comment = Comments(content=content, forum_id=post_id, username=current_user.username)
+    db1.session.add(new_comment)
+    db1.session.commit()
+    return redirect(url_for('forum'))
 
 
 @app.route('/chat')
@@ -198,7 +304,6 @@ def select_user():
     session['selected_user'] = selected_user
     return redirect(url_for('chat'))
 
-
 @app.route('/send', methods=['POST'])
 @login_required
 def send():
@@ -211,6 +316,6 @@ def send():
     return redirect(url_for('chat'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
 
