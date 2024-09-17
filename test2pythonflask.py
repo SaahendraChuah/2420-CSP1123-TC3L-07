@@ -34,7 +34,7 @@ class User(UserMixin,db1.Model):
        email=db1.Column(db1.String(60) ,unique=True, nullable=False)
        password=db1.Column(db1.String(100) ,unique=True, nullable= False)
        phone_number=db1.Column(db1.String(20), nullable=False)
-       qr_code=db1.relationship('QrCode' , backref='user' , uselist=False)
+
 
        def _str_(self):
             
@@ -62,7 +62,7 @@ class Profile(User,db1.Model):
      user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username') , nullable=False)
      profile_pic = db1.Column(db1.String(100), nullable=False)
      bio = db1.Column(db1.String(100), nullable=True)
-     qrcode = db1.Column(db1.String(255), nullable=False)
+
 
      def _str_ (self):
           return f"<Profile {self.user_name}>"
@@ -224,23 +224,6 @@ def send():
         db1.session.add(new_message)
         db1.session.commit()
     return redirect(url_for('chat'))
-
-
-
-
-
-
-
-     
-
-     
-
-
-
-
-
-
-
 
 
 
