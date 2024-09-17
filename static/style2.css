@@ -15,13 +15,34 @@ body{
 #profilephoto,#qrcode{
     flex:1;
     margin: 10px;
-
+    border-radius: 10px;
 }
 
 #profilephoto{
     text-align: center;
+    
 }
 
 #qrcode{
     text-align: center;
+}
+
+.photo-frame{
+    border: 5px solid black;
+    border-width: 1cm ;
+    height: auto;
+    width: auto;
+    padding: 1px;
+    display: inline-block;
+    border-radius: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    
+}
+
+.photo-frame img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
 }

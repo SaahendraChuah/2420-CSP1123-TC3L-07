@@ -7,18 +7,36 @@
     <link rel="stylesheet"  href="{{url_for('static', filename='style2.css')}}">
 </head>
 <body>
+  <h2><a href="{{url_for('main')}}">Go back To Main Page?</a></h2>
     <div class="profile">
       <div id="profilephoto">
-       <form action="functions.py"    method="post" enctype="multipart/form-data">
-        <label for="profilephoto"></label>
-        <input type="image" src="#" id="profilephoto" name="profilephoto" width="350" height="500">
+       <form action="{{url_for('profile')}}"    method="post" enctype="multipart/form-data">
+        <div class="photo-frame">
+          {% if user.profile and user.profile.profile_pic %}
+            {% if user.profile.profile_pic != "" %}
+               <img src="{{url_for('static' , filename='uploads/' +  user.profile.profile_pic)}}" id="profilephoto" alt="ProfilePhoto" width="350" height="500">
+            {% else %}
+               <p>No profile picture</p>
+            {% endif %}
+
+          {% else %}
+            <p>No profile picture </p>
+          {% endif%}
+          </div>
         <div>
-        <label for="profilephoto">Add your bio:</label>
-        <input type="text" id="profilephoto" name="profilephoto" size="45">
+          <label for="bio">Add your bio:</label>
+          <input type="text" id="bio" name="bio" size="45" value="{{user.profile.bio if user.profile else '' }}">
         </div>
         <br>
         <input type="file" id="profilephoto" name="profilephoto" accept="image/*">
+        <br>
+        <input type="submit"  value="Upload">
        </form>
+         <form action="{{url_for('removepic')}}"  method="post">
+           <input type="submit"  value="Remove">
+         </form>
+         
+
       </div>
 
     
