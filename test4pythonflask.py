@@ -58,6 +58,7 @@ class Profile(db1.Model):
     user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
     profile_pic = db1.Column(db1.String(100), nullable=True)
     bio = db1.Column(db1.String(100), nullable=True)
+    qr_code_url = db1.Column(db1.String(200) , nullable=False)
 
     def __str__(self):
         return f"<Profile {self.user_name}>"
@@ -314,6 +315,22 @@ def send():
         db1.session.add(new_message)
         db1.session.commit()
     return redirect(url_for('chat'))
+
+def generate_qr_code(user_id, base_url='http://yourapp.com/profile/'):
+    url = f"{base_url}{user_id}"
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+    file_path = os.path.join('static/uploads', f"{user_id}_qr.png")
+    img.save(file_path)
+    return file_path
 
 
 if __name__ == '__main__':
