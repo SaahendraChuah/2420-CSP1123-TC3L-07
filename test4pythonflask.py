@@ -289,7 +289,7 @@ def chat():
     selected_user = session.get('selected_user')
     if selected_user:
         messages = Message.query.filter(
-            ((Message.sender_username == current_user.username) & (Message.receiver_username == selected_user)) |
+            ((Message.sender_username == current_user.username) & (Message.receiver_username == selected_user)) 
             ((Message.sender_username == selected_user) & (Message.receiver_username == current_user.username))
         ).all()
     else:
