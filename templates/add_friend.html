@@ -1,15 +1,28 @@
+<!-- add_friend.html -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Friend</title>
 </head>
 <body>
-    {% if success %}
-        <p>Friend added successfully!</p>
-    {% else %}
-        <p>Error: {{ error_message }}</p>
+    <h1>Add Friend</h1>
+
+    <form action="{{url_for('add_friend')}}" method="post">
+        <label for="friend-username">Enter friend's username:</label>
+        <input type="text" id="friend-username" name="username">
+        <input type="submit" value="Add Friend">
+    </form>
+
+    <h2>Friend List:</h2>
+    <ul>
+        {% for friend in friends %}
+            <li>{{ friend.username }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if error_message %}
+        <p>{{ error_message }}</p>
     {% endif %}
 </body>
 </html>

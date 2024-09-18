@@ -30,11 +30,13 @@ db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-friendships = db1.Table('friendships',
-    db1.Column('user_id', db1.String(100), db1.ForeignKey('user.username')),
-    db1.Column('friend_id', db1.String(100), db1.ForeignKey('user.username'))
-)
+class Friendship(db1.Model):
+    id=db1.Column(db1.Integer, primary_key=True)
+    user_username=db1.Column(db1.String(100),db1.ForeignKey('user.username'))
+    friend_username=db1.Column(db1.String(100),db1.ForeignKey('user.username'))
 
+    user_friend=db1.relationship('User' , foreign_keys=[user_username] , backref='initiated_friendships')
+    friend=db1.relationship('User' , foreign_keys=[friend_username] , backref='received_friendships')
 
 class User(UserMixin, db1.Model):
     student_id = db1.Column(db1.String(100), primary_key=True)  # contains value that is immutable
@@ -45,13 +47,23 @@ class User(UserMixin, db1.Model):
     profile = db1.relationship('Profile', backref='user', uselist=False)
     Forum = db1.relationship('Forum', backref='user')
     Comments = db1.relationship('Comments', backref='user')
-    friends=db1.relationship('User' , secondary=friendships , primaryjoin=(username==friendships.c.user_id),secondaryjoin=(username==friendships.c.friend_id))
+    #friendships=db1.relationship('Friendship' , foreign_keys=[Friendship.user_username],backref='user', lazy='dynamic')
+
+
 
     def __str__(self):
         return f"<User {self.username}>"
 
     def get_id(self):
         return self.student_id
+    
+    @property
+    def friends(self):
+        initiated_friends=[friendship.friend for friendship in self.initiated_friendships]
+        received_friends=[friendship.user_friend for friendship in self.received_friendships]
+        return set(initiated_friends + received_friends)
+    
+    
 class Message(db1.Model):
     id = db1.Column(db1.Integer, primary_key=True)
     sender_username = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
@@ -182,7 +194,11 @@ def login():
          
          if user_register and bcrypt.check_password_hash(user_register.password,password_data):
               login_user(user_register)
-              return redirect("/main")
+              next_url=request.args.get('next')
+              if next_url:
+                  return redirect(next_url)
+              else:
+                return redirect("/main")
          else:
               
               return redirect ("/login")
@@ -205,21 +221,41 @@ def logout():
      
 
 def generate_qrcode(username):
-    base_url = " https://172e-2001-df0-ec0-7a00-e8a3-f405-1cf1-6975.ngrok-free.app/login?next=/add_friend/"
-    
-    user_profile_url = f"{base_url}{username}"
+    base_url = "https://b445-2001-e68-7000-1-89e2-7a21-5154-98bc.ngrok-free.app/login_qrcode"
+    user_profile_url = f"{base_url}?next=/add_friend/&username={username}"
     return f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={user_profile_url}"
 
-@app.route("/add_friend/<username>" , methods=["GET"])
-def add_friend(username):
-     user=current_user
-     friend=User.query.filter_by(username=username).first()
-     if friend:
-          user.friends.append(friend)
-          db1.session.commit()
-          return render_template("add_friend.html" , success=True)
-     else:
-          return render_template("add_friend.html" , success=False , error_message="UserNotFound")
+
+
+
+
+
+@app.route("/add_friend/", methods=["GET", "POST"])
+def add_friend():
+    username = request.args.get('username')
+    if request.method == "POST":
+        # Add friend logic here
+        return "Friend added!"
+    return render_template("add_friend.html", username=username)
+
+    
+
+@app.route("/login_qrcode", methods=["GET", "POST"])
+def login_qrcode():
+    if request.method == "POST":
+        # Simulate login process
+        session['logged_in'] = True
+        next_url = request.args.get('next')
+        username = request.args.get('username')
+        print(f"Next URL in login_qrcode: {next_url}")  # Debugging line
+        print(f"Username in login_qrcode: {username}")  # Debugging line
+        if next_url:
+            return redirect(next_url)
+        else:
+            return redirect(url_for('add_friend'))
+    else:
+        return render_template("login_qrcode.html")
+      
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -258,7 +294,8 @@ def profile():
         else:
             qrcode_url = generate_qrcode(current_user.username)
         
-        return render_template("profile.html", user=current_user, qrcode_url=qrcode_url)
+        friends=current_user.friends
+        return render_template("profile.html", user=current_user, qrcode_url=qrcode_url , friends=friends)
 
 
 @app.route("/uploads/<filename>")

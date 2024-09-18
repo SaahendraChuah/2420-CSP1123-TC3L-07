@@ -56,12 +56,20 @@
     
     </div>
 
- <div class="friends" id="friend-section">
+ 
+  <h2>Friends</h2>
   <ul>
-    <li>Friends</li>
+    {% if friends %}
+      {% for friend in friends %}
+      <li>{{ friend.username }}</li>
+      {% endfor %}
+    {% else %}
+       <li>No friends yet</li>
+    {% endif %}
+
   </ul>
 
- </div>
+ 
     
 </body>
 
