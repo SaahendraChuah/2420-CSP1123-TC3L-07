@@ -43,11 +43,11 @@
     
     <div id="qrcode">
         <h1><u>Unique Qr Code Profile</u></h1>
-        {% if user.profile and user.profile.qrcode %}
-             <img src="{{user.profile.qrcode}}" alt="QR Code">
-        {% else %}
-            <p>No QR code available</p>
-        {% endif %}
+        
+             <img src="{{qrcode_url}}" alt="QR Code">
+    
+            
+        
         <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
         <p>Qr Code Is Unique For Every User</p>
     </div>
@@ -56,12 +56,20 @@
     
     </div>
 
- <div class="friends" id="friend-section">
+ 
+  <h2>Friends</h2>
   <ul>
-    <li>Friends</li>
+    {% if friends %}
+      {% for friend in friends %}
+      <li>{{ friend.username }}</li>
+      {% endfor %}
+    {% else %}
+       <li>No friends yet</li>
+    {% endif %}
+
   </ul>
 
- </div>
+ 
     
 </body>
 
