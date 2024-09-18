@@ -221,7 +221,7 @@ def logout():
      
 
 def generate_qrcode(username):
-    base_url = "https://b445-2001-e68-7000-1-89e2-7a21-5154-98bc.ngrok-free.app/login_qrcode"
+    base_url = " https://a71d-2001-e68-7000-0-882b-cec2-a3cb-28e0.ngrok-free.app/login_qrcode"
     user_profile_url = f"{base_url}?next=/add_friend/&username={username}"
     return f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={user_profile_url}"
 
