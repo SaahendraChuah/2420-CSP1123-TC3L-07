@@ -43,11 +43,11 @@
     
     <div id="qrcode">
         <h1><u>Unique Qr Code Profile</u></h1>
-        
-             <img src="{{qrcode_url}}" alt="QR Code">
-    
-            
-        
+        {% if user.profile and user.profile.qrcode %}
+             <img src="{{url_for('static' , filename='uploads/' + user.profile.qrcode)}}" alt="QR Code"  width="300" height="300">
+        {% else %}
+            <p>No QR Code available</p>
+        {% endif %}
         <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
         <p>Qr Code Is Unique For Every User</p>
     </div>
