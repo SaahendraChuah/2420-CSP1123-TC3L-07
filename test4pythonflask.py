@@ -37,6 +37,7 @@ class User(UserMixin, db1.Model):
     profile = db1.relationship('Profile', backref='user', uselist=False)
     Forum = db1.relationship('Forum', backref='user')
     Comments = db1.relationship('Comments', backref='user')
+    
 
     def __str__(self):
         return f"<User {self.username}>"
@@ -58,6 +59,7 @@ class Profile(db1.Model):
     user_name = db1.Column(db1.String(100), db1.ForeignKey('user.username'), nullable=False)
     profile_pic = db1.Column(db1.String(100), nullable=True)
     bio = db1.Column(db1.String(100), nullable=True)
+    qrcode = db1.Column(db1.String(200), nullable=True)
 
     def __str__(self):
         return f"<Profile {self.user_name}>"
