@@ -31,13 +31,11 @@ db1=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 
 
-class Friendship(db1.Model):
-    id=db1.Column(db1.Integer, primary_key=True)
-    user_username=db1.Column(db1.String(100),db1.ForeignKey('user.username'))
-    friend_username=db1.Column(db1.String(100),db1.ForeignKey('user.username'))
-
-    user_friend=db1.relationship('User' , foreign_keys=[user_username] , backref='initiated_friendships')
-    friend=db1.relationship('User' , foreign_keys=[friend_username] , backref='received_friendships')
+friends_association = db1.Table('friends',
+    db1.Column('user_username', db1.String(150), db1.ForeignKey('user.username'), primary_key=True),
+    db1.Column('friend_username', db1.String(150), db1.ForeignKey('user.username'), primary_key=True)
+)
+                               
 
 class User(UserMixin, db1.Model):
     student_id = db1.Column(db1.String(100), primary_key=True)  # contains value that is immutable
@@ -49,7 +47,12 @@ class User(UserMixin, db1.Model):
     profile = db1.relationship('Profile', backref='user', uselist=False)
     Forum = db1.relationship('Forum', backref='user')
     Comments = db1.relationship('Comments', backref='user')
-    #friendships=db1.relationship('Friendship' , foreign_keys=[Friendship.user_username],backref='user', lazy='dynamic')
+    friends = db1.relationship('User',
+                              secondary=friends_association,
+                              primaryjoin=(friends_association.c.user_username == username),
+                              secondaryjoin=(friends_association.c.friend_username == username),
+                              backref='friend_of', lazy='dynamic')
+    
 
 
 
@@ -59,12 +62,7 @@ class User(UserMixin, db1.Model):
     def get_id(self):
         return self.student_id
 
-    
-    @property
-    def friends(self):
-        initiated_friends=[friendship.friend for friendship in self.initiated_friendships]
-        received_friends=[friendship.user_friend for friendship in self.received_friendships]
-        return set(initiated_friends + received_friends)
+   
     
     
 
@@ -120,6 +118,8 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
+     
+     
      
       
 
@@ -233,19 +233,25 @@ def generate_qr_code(user_uuid):
 
 
 @app.route("/add_friend.html", methods=["GET", "POST"])
+@login_required
 def add_friend():
     
     if request.method == "POST":
-        # Handle friend request logic here
         friend_username = request.form.get("friend_username")
-        # Add the logic to add this user as a friend
-
-    # Retrieve the user from the UUID passed in the URL
+        friend_user = User.query.filter_by(username=friend_username).first()
+        if friend_user:
+            if friend_user not in current_user.friends:
+                current_user.friends.append(friend_user)
+                db1.session.commit()
+                flash("Friend added successfully!")
+                
+            else:
+                flash("You are already friends with this user.")
+                return redirect(url_for('profile'))
+        else:
+            flash("User not found.")
     uuid = request.args.get('uuid')
     qr_code_owner = User.query.filter_by(uuid=uuid).first_or_404()
-
-    
-
     return render_template("add_friend.html", qr_code_owner=qr_code_owner)
 
     
@@ -385,14 +391,3 @@ def send():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-
-
-
-
-
-
-
-
-
-
