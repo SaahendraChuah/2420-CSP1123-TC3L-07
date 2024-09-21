@@ -13,6 +13,7 @@ import base64
 from io import BytesIO
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
 from datetime import datetime
+import uuid
 app=Flask(__name__)
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -44,6 +45,7 @@ class User(UserMixin, db1.Model):
     email = db1.Column(db1.String(60), unique=True, nullable=False)
     password = db1.Column(db1.String(100), nullable=False)  
     phone_number = db1.Column(db1.String(20), unique=True, nullable=False)
+    uuid=db1.Column(db1.String(36), unique=True, default=lambda:str(uuid.uuid4()), nullable=False)
     profile = db1.relationship('Profile', backref='user', uselist=False)
     Forum = db1.relationship('Forum', backref='user')
     Comments = db1.relationship('Comments', backref='user')
@@ -118,8 +120,7 @@ def user_loading(user_id):
 with app.app_context():
      db1.create_all()
      
-     
-     
+      
 
 @app.route("/search")
 def search():
@@ -194,11 +195,8 @@ def login():
          
          if user_register and bcrypt.check_password_hash(user_register.password,password_data):
               login_user(user_register)
-              next_url=request.args.get('next')
-              if next_url:
-                  return redirect(next_url)
-              else:
-                return redirect("/main")
+              return redirect("/main")
+
          else:
               
               return redirect ("/login")
@@ -220,82 +218,83 @@ def logout():
        return redirect(url_for('login'))
      
 
-def generate_qrcode(username):
-    base_url = "https://10d8-2001-e68-7000-0-882b-cec2-a3cb-28e0.ngrok-free.app/login_qrcode"
-    user_profile_url = f"{base_url}?next=/add_friend/&username={username}"
-    return f"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={user_profile_url}"
+
+def generate_qr_code(user_uuid):
+    unique_url=f"http://127.0.0.1:5000/add_friend.html?uuid={user_uuid}"
+    qr=qrcode.make(unique_url)
+    qr_filename=f"{user_uuid}_qrcode.png"
+    qr_path=os.path.join(app.config["UPLOAD_PROFILE"],qr_filename)
+    qr.save(qr_path)
+    return qr_filename
 
 
 
 
 
-
-@app.route("/add_friend/", methods=["GET", "POST"])
+@app.route("/add_friend.html", methods=["GET", "POST"])
 def add_friend():
-    username = request.args.get('username')
+    
     if request.method == "POST":
-        # Add friend logic here
-        return "Friend added!"
-    return render_template("add_friend.html", username=username)
+        # Handle friend request logic here
+        friend_username = request.form.get("friend_username")
+        # Add the logic to add this user as a friend
+
+    # Retrieve the user from the UUID passed in the URL
+    uuid = request.args.get('uuid')
+    qr_code_owner = User.query.filter_by(uuid=uuid).first_or_404()
 
     
 
-@app.route("/login_qrcode", methods=["GET", "POST"])
-def login_qrcode():
-    if request.method == "POST":
-        # Simulate login process
-        session['logged_in'] = True
-        next_url = request.args.get('next')
-        username = request.args.get('username')
-        print(f"Next URL in login_qrcode: {next_url}")  # Debugging line
-        print(f"Username in login_qrcode: {username}")  # Debugging line
-        if next_url:
-            return redirect(next_url)
-        else:
-            return redirect(url_for('add_friend'))
-    else:
-        return render_template("login_qrcode.html")
-      
+    return render_template("add_friend.html", qr_code_owner=qr_code_owner)
+
+    
+   
 
 
 @app.route("/profile", methods=["GET", "POST"])
+@login_required
+
+
 def profile():
+    existing_profile = Profile.query.filter_by(user_name=current_user.username).first()
+
+    
+    if not existing_profile or not existing_profile.qrcode:  # ensures the qrcode exists for the user or not.If no qrcode,new qrcode will be generated
+        qrcode_filename = generate_qr_code(current_user.uuid)
+        if existing_profile:
+            existing_profile.qrcode = qrcode_filename
+        else:
+            existing_profile = Profile(user_name=current_user.username, qrcode=qrcode_filename)
+            db1.session.add(existing_profile)
+        db1.session.commit()
+
     if request.method == "POST":
-        profile_pic = request.files["profilephoto"]
-        bio = request.form["bio"]
+        profile_pic = request.files.get("profilephoto")
+        bio = request.form.get("bio")
 
         if profile_pic:
-            filename = secure_filename(profile_pic.filename)  # securing the file
+            filename = secure_filename(profile_pic.filename)
             new_filename = f"{current_user.username}_{filename}"
             profile_pic.save(os.path.join(app.config["UPLOAD_PROFILE"], new_filename))
-            existing_profile = Profile.query.filter_by(user_name=current_user.username).first()
+
             if existing_profile:
                 existing_profile.profile_pic = new_filename
                 existing_profile.bio = bio
             else:
-                qrcode_url = generate_qrcode(current_user.username)
-                new_profile = Profile(user_name=current_user.username, profile_pic=new_filename, bio=bio, qrcode=qrcode_url)
-                db1.session.add(new_profile)
+                existing_profile = Profile(user_name=current_user.username, profile_pic=new_filename, bio=bio)
+                db1.session.add(existing_profile)
         else:
-            existing_profile = Profile.query.filter_by(user_name=current_user.username).first()
             if existing_profile:
                 existing_profile.bio = bio
             else:
-                qrcode_url = generate_qrcode(current_user.username)
-                new_profile = Profile(user_name=current_user.username, bio=bio, qrcode=qrcode_url)
-                db1.session.add(new_profile)
+                existing_profile = Profile(user_name=current_user.username, bio=bio)
+                db1.session.add(existing_profile)
 
         db1.session.commit()
         return redirect(url_for('profile'))
-    else:
-        existing_profile = Profile.query.filter_by(user_name=current_user.username).first()
-        if existing_profile:
-            qrcode_url = existing_profile.qrcode
-        else:
-            qrcode_url = generate_qrcode(current_user.username)
-        
-        friends=current_user.friends
-        return render_template("profile.html", user=current_user, qrcode_url=qrcode_url , friends=friends)
+
+    return render_template("profile.html", user=current_user, profile=existing_profile)
+    
 
 
 @app.route("/uploads/<filename>")
@@ -315,9 +314,7 @@ def  removepic():
        return redirect(url_for('profile'))
 
 
-@app.route("/qrcode")
-def qrcode():
-     pass
+
 
 
 
@@ -386,7 +383,7 @@ def send():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000,debug=True)
+    app.run(debug=True)
     
 
 

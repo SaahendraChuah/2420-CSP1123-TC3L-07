@@ -1,28 +1,22 @@
-<!-- add_friend.html -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Friend</title>
 </head>
 <body>
     <h1>Add Friend</h1>
 
-    <form action="{{url_for('add_friend')}}" method="post">
-        <label for="friend-username">Enter friend's username:</label>
-        <input type="text" id="friend-username" name="username">
+    <!-- Display the username of the QR code owner -->
+    <h2>Username: {{ qr_code_owner.username }}</h2>
+
+    <form action="{{ url_for('add_friend') }}" method="post">
+        <input type="hidden" name="friend_username" value="{{ qr_code_owner.username }}">
         <input type="submit" value="Add Friend">
     </form>
 
-    <h2>Friend List:</h2>
-    <ul>
-        {% for friend in friends %}
-            <li>{{ friend.username }}</li>
-        {% endfor %}
-    </ul>
-
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
+    
 </body>
 </html>
