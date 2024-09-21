@@ -17,6 +17,18 @@
         <input type="submit" value="Add Friend">
     </form>
 
+    {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li class="{{ message[1] }}">{{ message[0] }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+    {% endblock %}
+
     
 </body>
 </html>

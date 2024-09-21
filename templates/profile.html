@@ -55,17 +55,18 @@
 
     
     </div>
-
  
+
   <h2>Friends</h2>
+
   <ul>
-    {% if friends %}
-      {% for friend in friends %}
-      <li>{{ friend.username }}</li>
-      {% endfor %}
-    {% else %}
-       <li>No friends yet</li>
-    {% endif %}
+    {% if current_user.friends %}
+        {% for friend in current_user.friends %}
+          <li>{{ friend.username }}</li>
+        {% endfor %}
+      {% else %}
+        <li>No friends yet</li>
+      {% endif %}
 
   </ul>
 
