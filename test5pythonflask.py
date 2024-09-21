@@ -1,6 +1,6 @@
 from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash , session
 import jinja2
-
+#from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
@@ -118,7 +118,6 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
-     
      
      
      
@@ -359,28 +358,23 @@ def add_comment(post_id):
 @app.route('/chat')
 @login_required
 def chat():
-   # Get the friends of the current user
-    friends = current_user.friends
+    users = User.query.all()
     selected_user = session.get('selected_user')
-    
-    messages = []
     if selected_user:
         messages = Message.query.filter(
             ((Message.sender_username == current_user.username) & (Message.receiver_username == selected_user)) |
             ((Message.sender_username == selected_user) & (Message.receiver_username == current_user.username))
         ).all()
-    
-    return render_template('chat.html', users=friends, messages=messages, current_user=current_user, selected_user=selected_user)
+    else:
+        messages = []
+    return render_template('chat.html', users=users, messages=messages, current_user=current_user, selected_user=selected_user)
 
 
 @app.route('/select_user', methods=['POST'])
 @login_required
 def select_user():
     selected_user = request.form.get('selected_user')
-    if selected_user in [friend.username for friend in current_user.friends]:  # Check if selected user is a friend
-        session['selected_user'] = selected_user
-    else:
-        flash("You can only chat with your friends.")
+    session['selected_user'] = selected_user
     return redirect(url_for('chat'))
 
 @app.route('/send', methods=['POST'])
@@ -397,14 +391,3 @@ def send():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-
-
-
-
-
-
-
-
-
-

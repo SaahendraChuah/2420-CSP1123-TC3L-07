@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet"  href="{{url_for('static', filename='style2.css')}}">
+</head>
+<body>
+  <h2><a href="{{url_for('main')}}">Go back To Main Page?</a></h2>
+  
+    <div class="profile">
+      <div id="profilephoto">
+       <form action="{{url_for('profile')}}"    method="post" enctype="multipart/form-data">
+        <div class="photo-frame">
+          {% if user.profile and user.profile.profile_pic %}
+            {% if user.profile.profile_pic != "" %}
+               <img src="{{url_for('static' , filename='uploads/' +  user.profile.profile_pic)}}" id="profilephoto" alt="ProfilePhoto" width="350" height="500">
+            {% else %}
+               <p>No profile picture</p>
+            {% endif %}
+
+          {% else %}
+            <p>No profile picture </p>
+          {% endif%}
+          </div>
+        <div>
+          <label for="bio">Add your bio:</label>
+          <input type="text" id="bio" name="bio" size="45" value="{{user.profile.bio if user.profile else '' }}">
+        </div>
+        <br>
+        <input type="file" id="profilephoto" name="profilephoto" accept="image/*">
+        <br>
+        <input type="submit"  value="Upload">
+       </form>
+         <form action="{{url_for('removepic')}}"  method="post">
+           <input type="submit"  value="Remove">
+         </form>
+         
+
+      </div>
+
+    
+    <div id="qrcode">
+        <h1><u>Unique Qr Code Profile</u></h1>
+        {% if user.profile and user.profile.qrcode %}
+             <img src="{{url_for('static' , filename='uploads/' + user.profile.qrcode)}}" alt="QR Code"  width="300" height="300">
+        {% else %}
+            <p>No QR Code available</p>
+        {% endif %}
+        <p>Please Scan My Qr Code To Add Me As A Fellow Friend</p>
+        <p>Qr Code Is Unique For Every User</p>
+    </div>
+
+
+    
+    </div>
+ 
+
+  <h2>Friends</h2>
+
+  <ul>
+    {% if current_user.friends %}
+        {% for friend in current_user.friends %}
+          <li>{{ friend.username }}</li>
+        {% endfor %}
+      {% else %}
+        <li>No friends yet</li>
+      {% endif %}
+
+  </ul>
+
+ 
+    
+</body>
+
+
+
+
+
+
+
+</html>

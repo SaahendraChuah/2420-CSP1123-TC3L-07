@@ -3,47 +3,110 @@
 <head>
     <title>Forum Page</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .post-container {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .post {
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .content {
+            margin-bottom: 10px;
+        }
+        .username {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .comment-section {
+            margin-top: 20px;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-comment {
+            padding: 10px 20px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .text {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-	<a href="{{ forum_url }}">Go to the forum page</a>
-    <h1>Forum Discussion</h1>
-    <form method="POST" action="/add_post">
-		<label for="title">Title</label>
-		<input type="text" id="title" name="title" placeholder="Title" required>
-		<label for="content">Content</label>
-		<textarea id="content" name="content" placeholder="Content" required></textarea>
-		<label for="username">Username</label>
-		<input type="text" id="username" name="username" placeholder="Username" required>
-		<button type="submit" id="add-post">Add Post</button>
-	</form>
-    </form>
-    <div class="post-container">
-        {% for post in posts %}
-        <div class="post">
-            <h2 class="title">{{ post.title }}</h2>
-            <p class="content">{{ post.content }}</p>
-            <p class="username">Posted by: {{ post.username }}</p>
-            <div class="comment-section">
-                <form method="POST" action="/add_comment/{{ post.id }}">
-					<input type="hidden" name="forum_id" value="{{ post.id }}">
-					<input type="text" class="comment-input" name="content" placeholder="Add a comment..." required>
-					<label for="username">Username</label>
-					<input type="text" id="username" name="username" placeholder="Username" required>
-					<button type="submit" class="add-comment">Add Comment</button>
-				</form>
-                <div class="comments">
-                    {% for comment in post.comments %}
-                    <div class="comment">
-                        <p class="text">{{ comment.content }}</p>
-                        <p class="username">Commented by: {{ comment.username }}</p>
+    <h2><a href="{{url_for('main')}}">Back to main Page?</a></h2>
+    <div class="container">
+        <h1>Forum Discussion</h1>
+        <form method="POST" action="/add_post">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Title" required>
+            <label for="content">Content</label>
+            <textarea id="content" name="content" placeholder="Content" required></textarea>
+            <button type="submit" id="add-post">Add Post</button>
+        </form>
+        <div class="post-container">
+            {% for post in posts %}
+            <div class="post">
+                <h2 class="title">{{ post.title }}</h2>
+                <p class="content">{{ post.content }}</p>
+                <p class="username">Posted by: {{ post.username }}</p>
+                <div class="comment-section">
+                    <form method="POST" action="/add_comment/{{ post.id }}">
+                        <input type="text" class="comment-input" name="comment" placeholder="Add a comment..." required>
+                        <button type="submit" class="add-comment">Add Comment</button>
+                    </form>
+                    <div class="comments">
+                        {% if post.comments %}
+                            {% for comment in post.comments %}
+                            <div class="comment">
+                                <p class="text">{{ comment.content }}</p>
+                                <p class="username">Commented by: {{ comment.username }}</p>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No comments yet. Be the first to comment!</p>
+                        {% endif %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
+

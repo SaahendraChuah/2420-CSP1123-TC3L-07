@@ -1,6 +1,6 @@
 from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash , session
 import jinja2
-
+#from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
@@ -118,7 +118,6 @@ def user_loading(user_id):
 
 with app.app_context():
      db1.create_all()
-     
      
      
      
@@ -397,14 +396,3 @@ def send():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-
-
-
-
-
-
-
-
-
-

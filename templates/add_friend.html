@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+</head>
+<body>
+    <h1>Add Friend</h1>
+
+    <!-- Display the username of the QR code owner -->
+    <h2>Username: {{ qr_code_owner.username }}</h2>
+
+    <form action="{{ url_for('add_friend') }}" method="post">
+        <input type="hidden" name="friend_username" value="{{ qr_code_owner.username }}">
+        <input type="submit" value="Add Friend">
+    </form>
+
+    {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li class="{{ message[1] }}">{{ message[0] }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+    {% endblock %}
+
+    
+</body>
+</html>

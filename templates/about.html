@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About WIN MMU ICEBREAKER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: bradley hand,cursive;
+            background-image: linear-gradient(red , blue);
+            color: #0c00f3;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #00e1ff;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-decoration: underline;
+        }
+
+        p {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            background: #00fa04;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .features {
+            padding: 0 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .features p {
+            background: #44d57c;
+            border-left: 5px solid #0000ff;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .features p:hover {
+            transform: translateX(10px);
+            background-color: #d0e4f1;
+        }
+
+        .highlight {
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+
+        .purpose-section {
+            background: linear-gradient(135deg, #0015ff, #ff0800);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: slideInFromTop 3s ease-out;
+        }
+
+
+        
+    </style>
+</head>
+<body>
+    <div class = "purpose-section">
+    <h1><b>Purpose Of Our App</b></h1>
+       <p>Our web app is designed and created by 3 students who are junior developers in MMU to help freshies and our juniors who just enrolled in MMU to break the ice 
+       and interact with each other as it will develop and maintain long-lasting friendships and connections in this university during the period
+       of the WIN week of MMU every new intake that happens.That is our top priority and aim for us three.
+       </p>
+    </div>
+
+    <h1><b>Features That We Included In The Web App</b></h1>
+    <div class="features">
+        <p><span class="highlight">1. Private Messaging System:</span> This feature allows MMU students to have a one-to-one or private conversation with each other
+           about random stuff that they wish to which can help them to get to know each other more, learn 
+           about their interests, and build lasting friendships.
+        </p>
+        
+        <p><span class="highlight">2. Forum Boards:</span> This feature allows MMU students to voice their opinion out or post their comments publicly on the forum boards
+            which in return can help MMU students to discuss about the WIN week and share their own experiences with other random
+            students. 
+        </p>
+
+        <p><span class="highlight">3. Search Bar:</span> This feature allows students to search for other students' profiles that are already registered in the database
+            which will display their profile picture and bio.
+        </p>
+
+        <p><span class="highlight">4. Login/Logout:</span> This feature allows students to login and logout from the web app.</p>
+
+        <p><span class="highlight">5. Profile Picture/Bio:</span> Allows MMU students to upload their own profile picture of their choice and add their bio.</p>
+
+        <p><span class="highlight">6. QR Code And Achievement Record:</span> MMU students can scan other students' QR Codes to add them as a fellow friend and
+            put them in a friend list and the achievement record tracks the number of friends that
+            they made during the period of the win week.
+        </p>
+    </div>
+
+
+</body>
+</html>

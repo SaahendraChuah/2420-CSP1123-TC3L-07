@@ -1,0 +1,76 @@
+body{
+   background-image: linear-gradient(to right,purple,red,purple) ;
+}
+
+.profile{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+
+
+#profilephoto,#qrcode{
+    flex:1;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+#profilephoto{
+    text-align: center;
+    
+}
+
+#qrcode{
+    text-align: center;
+}
+
+.photo-frame{
+    border: 5px solid black;
+    border-width: 1cm ;
+    height: auto;
+    width: auto;
+    padding: 1px;
+    display: inline-block;
+    border-radius: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    
+}
+
+.photo-frame img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.profile-nav a{
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: yellow;
+    color: white;
+    border-radius: 5px;
+}
+
+.profile-nav{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+
+
+#profile-section :target,#friend-section:target{
+    display: block;
+}
+
+#profile-section, #friend-section{
+    display: none;
+}
+
+.profile:target{
+    display: block;
+}
