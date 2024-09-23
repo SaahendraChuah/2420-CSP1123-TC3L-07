@@ -245,7 +245,7 @@ def add_friend():
                 current_user.friends.append(friend_user)
                 db1.session.commit()
                 flash("Friend added successfully!")
-                
+                return redirect(url_for('profile'))
             else:
                 flash("You are already friends with this user.")
                 return redirect(url_for('profile'))
@@ -323,7 +323,16 @@ def  removepic():
 
 
 
+@app.route("/achievement")
+@login_required
+def achievement():
+    friend_count = db1.session.query(friends_association).filter_by(user_username=current_user.username).count()
 
+    has_10friends=friend_count >= 10
+    has_100friends=friend_count >= 100
+    has_250friends= friend_count >= 250
+
+    return render_template("achievement.html" , has_10friends=has_10friends , has_100friends=has_100friends, has_250friends=has_250friends)
 
 
 
