@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMU ICEBREAKER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif; 
+            margin: 0;
+            padding: 0;
+            background: black; 
+            color: #fff;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out; 
+            overflow: hidden; 
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 80%;
+            position: relative; 
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -10px; /* Adjust for thicker border */
+            left: -10px; /* Adjust for thicker border */
+            right: -10px; /* Adjust for thicker border */
+            bottom: -10px; /* Adjust for thicker border */
+            background: linear-gradient(to right, #1E90FF, #FF4500); /* Initial gradient border */
+            z-index: -1; /* Place behind the header */
+            border-radius: 15px; /* Match header's rounded corners with a slight increase */
+            animation: rgbBorder 3s infinite alternate; /* RGB border animation */
+        }
+
+        @keyframes rgbBorder {
+            0% {
+                background-color: rgba(255, 0, 0, 1); /* Red */
+                box-shadow: 0 0 20px rgba(255, 0, 0, 1); /* Thicker shadow */
+            }
+            25% {
+                background-color: rgba(0, 255, 0, 1); /* Green */
+                box-shadow: 0 0 20px rgba(0, 255, 0, 1); /* Thicker shadow */
+            }
+            50% {
+                background-color: rgba(0, 0, 255, 1); /* Blue */
+                box-shadow: 0 0 20px rgba(0, 0, 255, 1); /* Thicker shadow */
+            }
+            75% {
+                background-color: rgba(255, 255, 0, 1); /* Yellow */
+                box-shadow: 0 0 20px rgba(255, 255, 0, 1); /* Thicker shadow */
+            }
+            100% {
+                background-color: rgba(255, 0, 255, 1); /* Magenta */
+                box-shadow: 0 0 20px rgba(255, 0, 255, 1); /* Thicker shadow */
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+        }
+
+        .slogan {
+            font-style: italic;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            text-decoration: none; 
+            transition: background-color .3s ease, transform .2s; 
+            animation: pulseButton .8s infinite alternate; 
+        }
+
+        @keyframes pulseButton {
+            from {
+                transform: scale(1);
+                box-shadow: none;
+            }
+            to {
+                transform: scale(1.05);
+                box-shadow: 0px 4px 15px rgba(255,105,180,.5); 
+            }
+        }
+
+        section {
+            padding: 50px;
+        }
+
+        .background-shape {
+          position:absolute;
+          width :200px ;
+          height :200px ;
+          background :rgba(255 ,255 ,255 ,.2) ;
+          border-radius :50%;
+          animation :moveShape linear infinite ;
+          z-index:-2 ;
+        }
+
+        @keyframes moveShape {
+          from { transform :translate(-50% , -50%) ; }
+          to { transform :translate(calc(100vw +50%) , calc(100vh +50%)) ; }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to MMU ICEBREAKER!</h1>
+        <h2 class="slogan">"Connecting Students, Creating Friendships!"</h2>
+        <p>Join us during orientation days to meet new friends and build your community!</p>
+        <a href="{{url_for('register')}}" class="button">Get Started</a> 
+    </header>
+
+    <section id="explore">
+        <h2>How It Works</h2>
+        <p>Our app provides fun activities and icebreaker games designed to help you connect with fellow students.</p>
+    </section>
+
+    
+    <div class="background-shape" style="top:-50%; left:-50%; animation-duration :10s;"></div>
+    <div class="background-shape" style="top:-30%; left:-30%; animation-duration :15s;"></div>
+    <div class="background-shape" style="top:-40%; right:-30%; animation-duration :12s;"></div>
+    <div class="background-shape" style="bottom:-30%; left:-40%; animation-duration :8s;"></div>
+    <div class="background-shape" style="bottom:-40%; right:-40%; animation-duration :11s;"></div>
+
+</body>
+</html>
+
+
+

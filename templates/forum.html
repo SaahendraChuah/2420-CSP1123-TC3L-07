@@ -5,31 +5,98 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-image: linear-gradient(red , blue);
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            transition: background-color 0.5s ease;
         }
         .container {
             width: 80%;
             margin: auto;
-            overflow: hidden;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        h1 {
+            text-align: center;
+            color: #ff4757; /* Red color for title */
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db; /* Blue color for links */
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #2980b9; /* Darker blue on hover */
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #3498db; /* Blue color for labels */
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: #3498db; /* Blue on focus */
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            background: #ff4757; /* Red button */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: #e84118; /* Darker red on hover */
+            transform: translateY(-2px);
         }
         .post-container {
+            margin-top: 20px;
+        }
+        .post {
             background: #fff;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .post {
-            margin-bottom: 20px;
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         .title {
             font-size: 1.5em;
             margin-bottom: 10px;
+            color: #3498db; /* Blue color for post title */
         }
         .content {
             margin-bottom: 10px;
+            line-height: 1.5;
         }
         .username {
             font-size: 0.9em;
@@ -44,14 +111,11 @@
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            transition: border-color 0.3s;
         }
-        .add-comment {
-            padding: 10px 20px;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .comment-input:focus {
+            border-color: #3498db; /* Blue on focus */
+            outline: none;
         }
         .comments {
             margin-top: 20px;
@@ -61,6 +125,10 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .comment:hover {
+            background: #ffcccc; /* Light red background on hover */
         }
         .text {
             margin-bottom: 5px;

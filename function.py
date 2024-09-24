@@ -146,8 +146,8 @@ def view(username):
 
 
 @app.route("/")
-def test1():
-     return "Hello"
+def index():
+     return render_template('welcome.html')
 
 @app.route("/check_db")
 def check_db():

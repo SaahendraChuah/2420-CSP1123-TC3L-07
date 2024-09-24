@@ -1,101 +1,96 @@
-body{
-   background-image: linear-gradient(to right,purple,red,purple) ;
-}
-
-.profile{
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 100, 100, 0.5), rgba(100, 100, 255, 0.5));
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
 }
 
-
-
-
-#profilephoto,#qrcode{
-    flex:1;
-    margin: 10px;
-    border-radius: 10px;
-}
-
-#profilephoto{
-    text-align: center;
-    
-}
-
-#qrcode{
+h2 {
+    color: rgba(255, 255, 255, 0.8);
     text-align: center;
 }
 
-.photo-frame{
-    border: 5px solid black;
-    border-width: 1cm ;
-    height: auto;
-    width: auto;
-    padding: 1px;
-    display: inline-block;
-    border-radius: 10px;
-    max-width: 100%;
-    max-height: 100%;
-    
-}
-
-.photo-frame img{
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.profile-nav a{
-    text-decoration: none;
-    padding: 10px 20px;
-    background-color: yellow;
-    color: white;
-    border-radius: 5px;
-}
-
-.profile-nav{
+.profile {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-
-
-#profile-section :target,#friend-section:target{
-    display: block;
+#profilephoto {
+    flex: 1;
+    padding: 20px;
+    margin-right: 20px;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
 }
 
-#profile-section, #friend-section{
-    display: none;
+.photo-frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
-.profile:target{
-    display: block;
-}
-
-.flash-message{
-    width: 50%;
-    padding: 15px;
-    border-radius: 5px;
+#qrcode {
+    flex: 1;
+    padding: 20px;
     text-align: center;
+}
+
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
     margin: 10px 0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    transition: border 0.3s;
 }
 
-.alert.error{
-    background-color: red;
-    color: white;
-    border: 1px ;
+input[type="text"]:focus, input[type="file"]:focus {
+    border: 1px solid rgba(0, 100, 255, 1);
+    outline: none;
 }
 
-.alert.success{
-    background-color: lawngreen;
-    color: white;
-    border: 1px;
+input[type="submit"] {
+    background: linear-gradient(90deg, rgba(0, 255, 100, 1), rgba(255, 255, 0, 1));
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
 }
-.alert.usererror{
-    background-color: yellow;
-    color:white;
-    border: 1px;
+
+input[type="submit"]:hover {
+    background: linear-gradient(90deg, rgba(255, 255, 0, 1), rgba(0, 255, 100, 1));
+    transform: translateY(-2px);
+}
+
+#qrcode h1 {
+    color: rgba(255, 0, 150, 1);
+}
+
+#qrcode p {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: center;
+}
+
+li {
+    background: rgba(0, 150, 255, 0.1);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
 }
