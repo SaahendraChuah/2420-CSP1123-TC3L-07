@@ -5,82 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Private Messaging System</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e0f7fa; /* Light blue background */
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            margin: 20px;
-            color: #01579b; /* Dark blue color for the heading */
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 20px;
-            box-sizing: border-box;
-            border: 2px solid #00796b; /* Teal border for the container */
-        }
-        .messages {
-            margin-top: 20px; /* Adjust margin to ensure messages appear below the form */
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #00796b; /* Teal border for the messages area */
-            border-radius: 8px;
-            padding: 10px;
-            background: #b2dfdb; /* Light teal background for messages */
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #ffebee; /* Light red background for individual messages */
-        }
-        .username {
-            font-weight: bold;
-            color: #c62828; /* Dark red color for username */
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #00796b; /* Teal color for labels */
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #00796b; /* Teal border for inputs */
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        button {
-            background-color: #c62828; /* Dark red background for the button */
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #b71c1c; /* Slightly darker red for hover effect */
-        }
+       body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.5), rgba(0, 255, 0, 0.5), rgba(0, 0, 255, 0.5), rgba(255, 0, 255, 0.5), rgba(255, 255, 0, 0.5));
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.5s ease;
+}
+
+h1 {
+    margin: 20px;
+    color: rgb(1, 87, 155);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transition: color 0.3s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    margin: 20px;
+    box-sizing: border-box;
+    border: 5px solid transparent; /* Set a transparent border for the effect */
+    border-image: linear-gradient(45deg, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255), rgb(255, 0, 255), rgb(255, 255, 0)) 1; /* Create a gradient border */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+}
+
+.messages {
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid rgb(0, 121, 107);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(178, 223, 219, 0.8);
+    transition: background 0.3s ease;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 235, 238, 0.9);
+    position: relative;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.message:hover {
+    transform: scale(1.02);
+    background: rgba(255, 204, 204, 0.8);
+}
+
+.username {
+    font-weight: bold;
+    color: rgb(198, 40, 40);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: rgb(0, 121, 107);
+    transition: color 0.3s;
+}
+
+select, input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgb(0, 121, 107);
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus, input[type="text"]:focus, textarea:focus {
+    border-color: rgb(0, 77, 64);
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 77, 64, 0.5);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+button {
+    background: linear-gradient(90deg, rgba(198, 40, 40, 1), rgba(255, 100, 100, 1));
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, rgba(255, 100, 100, 1), rgba(198, 40, 40, 1));
+    transform: translateY(-2px);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(0, 121, 107);
+    margin-top: 20px;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: rgb(0, 77, 64);
+}
+
+
     </style>
 </head>
 <body>
@@ -117,5 +171,5 @@
         </div>
     </div>
     <p><a href="{{url_for('main')}}">Go back to main page?</a></p>
-    </body>
+</body>
 </html>

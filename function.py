@@ -148,7 +148,7 @@ def unauthorized():
 
 @app.route("/")
 def test1():
-     return "Hello"
+     return render_template("welcome.html")
 
 @app.route("/check_db")
 def check_db():
