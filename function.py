@@ -1,5 +1,6 @@
 from flask import Flask , render_template , request , redirect   , url_for , send_from_directory , flash , session
 import jinja2
+import time
 #from jinja2 import Environment,FileSystemLoader
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy.exc import IntegrityError
@@ -112,7 +113,7 @@ class Comments(db1.Model):
 
 
 @login_manager.user_loader
-def user_loading(user_id):
+def load_user(user_id):
      return User.query.get(user_id)
 
 
@@ -142,9 +143,7 @@ def view(username):
      user=User.query.filter_by(username=username).first_or_404()
      return render_template("view.html", user=user)
 
-@app.route("/unauthorized")
-def unauthorized():
-     return "You are unauthorized to view this page" , 403
+
 
 @app.route("/")
 def test1():
@@ -175,8 +174,8 @@ def register():
           
           except IntegrityError:
                db1.session.rollback()
-               return ("You already have an existing account.")
-               
+               flash("You already have an existing account.")
+               return render_template("register.html")
                
      else:
           return render_template("register.html")
@@ -187,7 +186,7 @@ def register():
 @app.route("/login" , methods = ["GET" , "POST"])
 def login():
     if request.method == "POST":
-         student_id_data = request.form["id"]
+         
          username_data= request.form["username"]
          password_data= request.form["password"]
 
@@ -199,8 +198,8 @@ def login():
               return redirect("/main")
 
          else:
-              
-              return redirect ("/login")
+              flash("Incorrect Username/Password.Please try again")
+              return render_template("login.html")
     else:
          
          return render_template("login.html")
@@ -243,15 +242,21 @@ def add_friend():
             if friend_user not in current_user.friends:
                 current_user.friends.append(friend_user)
                 db1.session.commit()
-                flash("Friend added successfully!")
+                flash("Friend added successfully!" , "success")
+                
+                return redirect(url_for('profile'))
                 
             else:
-                flash("You are already friends with this user.")
+                flash("You are already friends with this user." , "error")
+                
                 return redirect(url_for('profile'))
         else:
             flash("User not found.")
     uuid = request.args.get('uuid')
     qr_code_owner = User.query.filter_by(uuid=uuid).first_or_404()
+    if qr_code_owner == current_user:
+        flash("You cannot add yourself as a friend", "usererror")
+        return redirect(url_for('profile'))
     return render_template("add_friend.html", qr_code_owner=qr_code_owner)
 
     
@@ -392,6 +397,12 @@ def send():
         db1.session.add(new_message)
         db1.session.commit()
     return redirect(url_for('chat'))
+
+@app.route("/about")
+@login_required
+def about():
+    return render_template("about.html")
+
 
 @app.route("/achievement")
 @login_required

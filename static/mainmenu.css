@@ -69,6 +69,18 @@ i{
     margin-right: 7px;
 }
 
+.flash-message{
+    width: 50%;
+    padding: 15px;
+    background-color: red;
+    color: white;
+    border: 1px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    position: relative;
+}
+
 
 
 
