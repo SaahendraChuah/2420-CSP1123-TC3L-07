@@ -94,3 +94,42 @@ li {
     margin: 5px 0;
     border-radius: 5px;
 }
+
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px; 
+    }
+
+    .profile {
+        flex-direction: column; 
+        width: 100%; 
+    }
+
+    #profilephoto {
+        margin-right: 0; 
+        border-right: none; 
+    }
+
+    input[type="text"], input[type="file"], input[type="submit"] {
+        padding: 8px; 
+    }
+
+    h2 {
+        font-size: 1.5rem; 
+    }
+
+    #qrcode h1 {
+        font-size: 1.8rem; 
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.2rem; 
+    }
+
+    input[type="submit"] {
+        padding: 8px; 
+    }
+}

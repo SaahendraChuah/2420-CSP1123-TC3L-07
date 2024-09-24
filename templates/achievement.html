@@ -50,6 +50,33 @@
             border-top: 1px solid #ccc;
             margin: 20px 0;
         }
+        @media (max-width: 768px) {
+            .container {
+                width: 80%; /* Use more width on smaller screens */
+                padding: 15px; /* Adjust padding */
+            }
+
+            .achievement p,
+            .tick-label {
+                font-size: 16px; /* Smaller font size for tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%; /* Further adjust for mobile */
+                padding: 10px; /* Reduce padding */
+            }
+
+            .achievement p,
+            .tick-label {
+                font-size: 14px; /* Smaller font size for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
     </style>
 </head>
 <body>

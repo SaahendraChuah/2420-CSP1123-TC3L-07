@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Friend</title>
-    <link rel="stylesheet"  href="{{url_for('static', filename='style2.css')}}">
+    
     <style>
         body {
   font-family: Arial, sans-serif;
-  background-image: linear-gradient(to right ,red , blue); /* warm beige background */
+  background-image: linear-gradient(to right ,red , blue); 
 }
 
 h1, h2 {
-  color: white; /* deep blue text */
+  color: white; 
   text-align: center;
   margin-bottom: 20px;
 }
@@ -26,20 +26,20 @@ h2 {
   font-size: 24px;
 }
 
-/* Form Styles */
+
 
 form {
   max-width: 300px;
   margin: 40px auto;
   padding: 20px;
-  background-color: red; /* white background */
-  border: 1px solid blue; /* orange border */
-  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); /* vibrant orange shadow */
+  background-color: red; 
+  border: 1px solid blue; 
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5); 
 }
 
 input[type="submit"] {
-  background-color: blue; /* bright green background */
-  color: #fff; /* white text */
+  background-color: blue; 
+  color: #fff; 
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -47,35 +47,46 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: blue; /* darker green on hover */
+  background-color: blue; 
 }
 
-/* Flash Messages Styles */
+@media (max-width: 768px) {
+            h1 {
+                font-size: 28px; 
+            }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+            h2 {
+                font-size: 20px; 
+            }
 
-li {
-  padding: 10px;
-  border-bottom: 1px solid #ffd7be; /* light orange border */
-}
+            form {
+                max-width: 90%; 
+                margin: 20px auto; 
+                padding: 15px; 
+            }
+        }
 
-li:last-child {
-  border-bottom: none;
-}
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px; 
+            }
 
-li.error {
-  background-color: black; /* light orange background */
-  color: white; /* dark orange text */
-}
+            h2 {
+                font-size: 18px; 
+            }
 
-li.success {
-  background-color: black; /* light green background */
-  color: white; /* dark green text */
-}
+            form {
+                padding: 10px; 
+            }
+
+            input[type="submit"] {
+                padding: 10px; 
+            }
+        }
+    
+
+
+
     </style>
 </head>
 <body>

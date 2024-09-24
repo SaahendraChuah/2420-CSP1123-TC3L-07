@@ -80,5 +80,28 @@ a:hover {
     color: rgba(255, 0, 150, 1);
 }
 
+@media (max-width: 768px) {
+    #login {
+        width: 90%; 
+        padding: 30px; 
+    }
 
+    h2 {
+        font-size: 1.5rem; 
+    }
+
+    input[type="submit"] {
+        font-size: 14px; 
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.2rem; 
+    }
+
+    input[type="submit"] {
+        padding: 8px; 
+    }
+}
 

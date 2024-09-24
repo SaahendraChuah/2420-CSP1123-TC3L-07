@@ -38,36 +38,36 @@
         header::before {
             content: '';
             position: absolute;
-            top: -10px; /* Adjust for thicker border */
-            left: -10px; /* Adjust for thicker border */
-            right: -10px; /* Adjust for thicker border */
-            bottom: -10px; /* Adjust for thicker border */
-            background: linear-gradient(to right, #1E90FF, #FF4500); /* Initial gradient border */
-            z-index: -1; /* Place behind the header */
-            border-radius: 15px; /* Match header's rounded corners with a slight increase */
-            animation: rgbBorder 3s infinite alternate; /* RGB border animation */
+            top: -10px; 
+            left: -10px; 
+            right: -10px; 
+            bottom: -10px; 
+            background: linear-gradient(to right, #1E90FF, #FF4500); 
+            z-index: -1; 
+            border-radius: 15px; 
+            animation: rgbBorder 3s infinite alternate; 
         }
 
         @keyframes rgbBorder {
             0% {
-                background-color: rgba(255, 0, 0, 1); /* Red */
-                box-shadow: 0 0 20px rgba(255, 0, 0, 1); /* Thicker shadow */
+                background-color: rgba(255, 0, 0, 1); 
+                box-shadow: 0 0 20px rgba(255, 0, 0, 1); 
             }
             25% {
-                background-color: rgba(0, 255, 0, 1); /* Green */
-                box-shadow: 0 0 20px rgba(0, 255, 0, 1); /* Thicker shadow */
+                background-color: rgba(0, 255, 0, 1); 
+                box-shadow: 0 0 20px rgba(0, 255, 0, 1); 
             }
             50% {
-                background-color: rgba(0, 0, 255, 1); /* Blue */
-                box-shadow: 0 0 20px rgba(0, 0, 255, 1); /* Thicker shadow */
+                background-color: rgba(0, 0, 255, 1); 
+                box-shadow: 0 0 20px rgba(0, 0, 255, 1); 
             }
             75% {
-                background-color: rgba(255, 255, 0, 1); /* Yellow */
-                box-shadow: 0 0 20px rgba(255, 255, 0, 1); /* Thicker shadow */
+                background-color: rgba(255, 255, 0, 1); 
+                box-shadow: 0 0 20px rgba(255, 255, 0, 1); 
             }
             100% {
-                background-color: rgba(255, 0, 255, 1); /* Magenta */
-                box-shadow: 0 0 20px rgba(255, 0, 255, 1); /* Thicker shadow */
+                background-color: rgba(255, 0, 255, 1); 
+                box-shadow: 0 0 20px rgba(255, 0, 255, 1); 
             }
         }
 
@@ -129,12 +129,65 @@
           from { transform :translate(-50% , -50%) ; }
           to { transform :translate(calc(100vw +50%) , calc(100vh +50%)) ; }
         }
+   @media (max-width: 768px) {
+    header {
+        width: 90%;
+        padding: 15px;
+    }
 
+    h1 {
+        font-size: 2.5em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    .button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+    }
+
+    section {
+        padding: 30px;
+    }
+}
+
+/* For devices with a width less than or equal to 480px (phones) */
+@media (max-width: 480px) {
+    header {
+        width: 95%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.1em;
+    }
+
+    .button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    .background-shape {
+        width: 100px;
+        height: 100px;
+    }
+}
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to MMU ICEBREAKER!</h1>
+        <h1>Welcome to MMU WIN ICEBREAKER!</h1>
         <h2 class="slogan">"Connecting Students, Creating Friendships!"</h2>
         <p>Join us during orientation days to meet new friends and build your community!</p>
         <a href="{{url_for('register')}}" class="button">Get Started</a> 
