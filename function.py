@@ -220,7 +220,8 @@ def logout():
 
 
 def generate_qr_code(user_uuid):
-    unique_url=f"http://127.0.0.1:5000/add_friend.html?uuid={user_uuid}"
+    base_url =os.getenv("BASE_URL")
+    unique_url=f"{base_url}/add_friend.html?uuid={user_uuid}"
     qr=qrcode.make(unique_url)
     qr_filename=f"{user_uuid}_qrcode.png"
     qr_path=os.path.join(app.config["UPLOAD_PROFILE"],qr_filename)
