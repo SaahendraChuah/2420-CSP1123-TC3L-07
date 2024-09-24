@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+              <meta http-equiv="refresh" content="2;url=/profile">
+        {% endif %}
+    {% endwith %}
+
     <link rel="stylesheet"  href="{{url_for('static', filename='style2.css')}}">
+
 </head>
 <body>
+  <div id="flash-messages"></div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+             <div class="flash-message alert {{ category }}"> {{ message }} </div>   
+            {% endfor %}
+            
+        {% endif %}
+    {% endwith %}
+    </div>
   <h2><a href="{{url_for('main')}}">Go back To Main Page?</a></h2>
   
     <div class="profile">
@@ -60,13 +77,12 @@
   <h2>Friends</h2>
 
   <ul>
-    {% if current_user.friends %}
+    
         {% for friend in current_user.friends %}
-          <li>{{ friend.username }}</li>
+           <li>{{ friend.username }}</li>
         {% endfor %}
-      {% else %}
-        <li>No friends yet</li>
-      {% endif %}
+        
+    
 
   </ul>
 
