@@ -8,7 +8,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#login {
+#login , #register {
     background: rgba(255, 255, 255, 0.9);
     padding: 40px;
     border-radius: 10px;
@@ -35,7 +35,7 @@ label {
     color: #555;
 }
 
-input[type="text"],
+input[type="text"],input[type="email"],
 input[type="password"] {
     width: 100%;
     padding: 10px;
@@ -45,7 +45,8 @@ input[type="password"] {
     transition: border 0.3s;
 }
 
-input[type="text"]:focus,
+input[type="text"]:focus
+input[type="email"]:focus
 input[type="password"]:focus {
     border: 1px solid rgba(0, 150, 255, 1);
     outline: none;
@@ -80,15 +81,36 @@ a:hover {
     color: rgba(255, 0, 150, 1);
 }
 
+.flash-message{
+    width: 50%;
+    padding: 15px;
+    background-color: red;
+    color: white;
+    border: 1px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
 @media (max-width: 768px) {
     #login {
         width: 90%; 
         padding: 30px; 
     }
-
-    h2 {
-        font-size: 1.5rem; 
+    #register{
+        width: 90%;
+        padding: 30px;
     }
+
+.flash-message{
+    width:90%;
+    
+}
 
     input[type="submit"] {
         font-size: 14px; 
@@ -98,6 +120,11 @@ a:hover {
 @media (max-width: 480px) {
     h2 {
         font-size: 1.2rem; 
+    }
+
+    .flash-message{
+        width: 100%;
+        padding: 10px;
     }
 
     input[type="submit"] {

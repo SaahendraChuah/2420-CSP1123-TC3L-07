@@ -13,6 +13,7 @@ import qrcode
 import base64
 from io import BytesIO
 from flask_login import UserMixin , LoginManager , login_user , logout_user , current_user , login_required
+from flask_migrate import Migrate
 from datetime import datetime
 import uuid
 app=Flask(__name__)
@@ -25,10 +26,12 @@ directory= 'C:\\Users\\User\\OneDrive\\Desktop\\2420-CSP1123-TC3L-07\\static\\up
 
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database1.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URL' , "postgresql://mmu_win_database_user:lyEcr3ixCUn5o73rO1CwtArwX7mEOZny@dpg-crppi3ogph6c73a121n0-a.singapore-postgres.render.com/mmu_win_database")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "happy_birthday" 
 app.config["UPLOAD_PROFILE"] = os.path.join(os.getcwd(), "static/uploads/")
 db1=SQLAlchemy(app)
+migrate = Migrate(app,db1)
 bcrypt=Bcrypt(app)
 
 
