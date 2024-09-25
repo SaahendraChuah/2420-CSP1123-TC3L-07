@@ -7,9 +7,17 @@
 
 <body>
     
+    <div id="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                 <div class="flash-message"> {{ message }} </div>   
+                {% endfor %}
+                
+            {% endif %}
+        {% endwith %}
+    </div>  
     
-    {% block title %}
-    Register
    
     <div id="register" >
         <form action="/register", method="post"><!--post method is more safer and secure in terms of data handling-->
@@ -71,7 +79,7 @@
         
         
         
-    {% endblock %}    
+    
 
 
 
